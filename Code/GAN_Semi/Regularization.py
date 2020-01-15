@@ -10,7 +10,7 @@ GENERATE_SQUARE = 64
 IMAGE_CHANNELS = 3
 TRAIN_PERC = 0.75
 CLASS_NUM = 3
-BATCH_SIZE = 60
+BATCH_SIZE = 30
 n_samples = int(BATCH_SIZE / CLASS_NUM)
 latent_dim = 100
 IMAGE_NUM = 2574
@@ -94,33 +94,16 @@ np.random.shuffle(class_2_data)
 
 class_0_training_data = class_0_data[0: X_with_Class_0_Train_Num]
 class_0_testing_data = class_0_data[X_with_Class_0_Train_Num:]
-ix = np.random.randint(0, len(class_0_testing_data), 90)
-class_0_testing_trim_data = np.asarray(class_0_testing_data[ix])
-
 
 class_1_training_data = class_1_data[0: X_with_Class_1_Train_Num]
 class_1_testing_data = class_1_data[X_with_Class_1_Train_Num:]
-ix = np.random.randint(0, len(class_1_testing_data), 90)
-class_1_testing_trim_data = np.asarray(class_1_testing_data[ix])
 
 class_2_training_data = class_2_data[0: X_with_Class_2_Train_Num]
 class_2_testing_data = class_2_data[X_with_Class_2_Train_Num:]
-ix = np.random.randint(0, len(class_2_testing_data), 90)
-class_2_testing_trim_data = np.asarray(class_2_testing_data[ix])
-
-print("Length of class_0 test data: ", len(class_0_testing_data))
-print("Length of class_1 test data: ", len(class_1_testing_data))
-print("Length of class_2 test data: ", len(class_2_testing_data))
 
 X_test = np.concatenate((class_0_testing_data, class_1_testing_data, class_2_testing_data), axis=0)
 y_test = np.concatenate((np.zeros((len(class_0_testing_data), 1)), np.ones((len(class_1_testing_data), 1)),
                          2 * np.ones((len(class_2_testing_data), 1))), axis=0)
-
-X_test_trim = np.concatenate((class_0_testing_trim_data, class_1_testing_trim_data, class_2_testing_trim_data), axis=0)
-y_test_trim = np.concatenate((np.zeros((len(class_0_testing_trim_data), 1)), np.ones((len(class_1_testing_trim_data), 1)),
-                         2 * np.ones((len(class_2_testing_trim_data), 1))), axis=0)
-
-print(y_test_trim)
 
 ########################################################################################################
 
@@ -143,7 +126,7 @@ from keras.layers import Conv2DTranspose
 from keras.layers.normalization import BatchNormalization
 from keras.layers import LeakyReLU
 from keras.layers import Dropout
-from sklearn.metrics import classification_report
+from keras import regularizers
 from keras.layers import Lambda
 from keras.layers import Activation
 import matplotlib.pyplot as plt
@@ -158,24 +141,25 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=3):
     fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(in_image)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
+    fe = Dropout(0.15)(fe)
 
     fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
+    fe = Dropout(0.15)(fe)
 
     fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
+    fe = Dropout(0.15)(fe)
 
     fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
+    fe = Dropout(0.15)(fe)
 
     # flatten feature maps
     fe = Flatten()(fe)
-
-    # dropout
-    fe = Dropout(0.4)(fe)
 
     d_out_layer = Dense(1, activation="sigmoid")(fe)
     d_model = Model(in_image, d_out_layer)
@@ -287,10 +271,5 @@ for i in range(ITERATIONS):
     if (i + 1) % (BATCH_NUM * 1) == 0:
         epoch += 1
         print(f"Epoch {epoch}, c model accuarcy on training data: {c_acc}")
-        _, test_acc = c_model.evaluate(X_test_trim, y_test_trim, verbose=0)
+        _, test_acc = c_model.evaluate(X_test, y_test, verbose=0)
         print(f"Epoch {epoch}, c model accuarcy on test data: {test_acc}")
-        y_pred = c_model.predict(X_test_trim, batch_size=60, verbose=0)
-        y_pred_bool = np.argmax(y_pred, axis=1)
-        print("Length of y_pred: ", len(y_pred))
-        print(y_pred_bool)
-        print(classification_report(y_test_trim, y_pred_bool))

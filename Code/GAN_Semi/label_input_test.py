@@ -3,7 +3,7 @@ import os
 from PIL import Image
 import numpy as np
 
-label_path = r"D:\Data\new_label.xlsx"
+label_path = r"D:\Data\LD2_PKYonge_Class1_Mar142019_B\new_label.xlsx"
 
 GENERATE_SQUARE = 64
 IMAGE_CHANNELS = 3
