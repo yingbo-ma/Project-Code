@@ -35,20 +35,20 @@ def excel_data(file_path):
 
 
 print("Start reading Image & Label data...")
-list = excel_data(label_path)
+label_list = excel_data(label_path)
 
 list_0 = []
-for i, j in enumerate(list):
+for i, j in enumerate(label_list):
     if j == 0:
         list_0.append(i)
 
 list_1 = []
-for i, j in enumerate(list):
+for i, j in enumerate(label_list):
     if j == 1:
         list_1.append(i)
 
 list_2 = []
-for i, j in enumerate(list):
+for i, j in enumerate(label_list):
     if j == 2:
         list_2.append(i)
 
@@ -56,21 +56,15 @@ X_with_Class_0_Num = len(list_0)
 X_with_Class_1_Num = len(list_1)
 X_with_Class_2_Num = len(list_2)
 
-print(X_with_Class_0_Num)
-print(X_with_Class_1_Num)
-print(X_with_Class_2_Num)
-
 ALL_DATA_NUM = X_with_Class_0_Num + X_with_Class_1_Num + X_with_Class_2_Num
-
-X_with_Class_0_Train_Num = int(X_with_Class_0_Num * TRAIN_PERC)
-X_with_Class_1_Train_Num = int(X_with_Class_1_Num * TRAIN_PERC)
-X_with_Class_2_Train_Num = int(X_with_Class_2_Num * TRAIN_PERC)
 
 class_0_data = []
 for index in range(X_with_Class_0_Num):
     path = os.path.join(DATA_PATH, str(list_0[index]) + ".jpg")
     image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
     class_0_data.append(np.asarray(image))
+
+print(len(class_0_data))
 
 class_0_data = np.reshape(class_0_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
 
@@ -80,6 +74,8 @@ for index in range(X_with_Class_1_Num):
     image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
     class_1_data.append(np.asarray(image))
 
+print(len(class_1_data))
+
 class_1_data = np.reshape(class_1_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
 
 class_2_data = []
@@ -87,6 +83,8 @@ for index in range(X_with_Class_2_Num):
     path = os.path.join(DATA_PATH, str(list_2[index]) + ".jpg")
     image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
     class_2_data.append(np.asarray(image))
+
+print(len(class_2_data))
 
 class_2_data = np.reshape(class_2_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
 
@@ -96,21 +94,42 @@ np.random.shuffle(class_0_data)
 np.random.shuffle(class_1_data)
 np.random.shuffle(class_2_data)
 
+X_with_Class_0_Train_Num = int(len(class_0_data) * TRAIN_PERC)
+X_with_Class_1_Train_Num = int(len(class_1_data) * TRAIN_PERC)
+X_with_Class_2_Train_Num = int(len(class_2_data) * TRAIN_PERC)
+
 class_0_training_data = class_0_data[0: X_with_Class_0_Train_Num]
 class_0_testing_data = class_0_data[X_with_Class_0_Train_Num:]
-ix = np.random.randint(0, len(class_0_testing_data), 20)
-class_0_testing_trim_data = np.asarray(class_0_testing_data[ix])
 
+print(len(class_0_training_data))
 
 class_1_training_data = class_1_data[0: X_with_Class_1_Train_Num]
 class_1_testing_data = class_1_data[X_with_Class_1_Train_Num:]
-ix = np.random.randint(0, len(class_1_testing_data), 20)
-class_1_testing_trim_data = np.asarray(class_1_testing_data[ix])
+
+origin_list = list(class_1_training_data)
+new_list_0 = list.copy(origin_list)
+new_list_1 = list.copy(origin_list)
+all_list = origin_list + new_list_0 + new_list_1
+np.random.shuffle(all_list)
+class_1_training_data = all_list
+class_1_training_data = np.asarray(all_list)
+print(len(class_1_training_data))
 
 class_2_training_data = class_2_data[0: X_with_Class_2_Train_Num]
 class_2_testing_data = class_2_data[X_with_Class_2_Train_Num:]
-ix = np.random.randint(0, len(class_2_testing_data), 20)
-class_2_testing_trim_data = np.asarray(class_2_testing_data[ix])
+
+origin_list = list(class_2_training_data)
+new_list_0 = list.copy(origin_list)
+new_list_1 = list.copy(origin_list)
+new_list_2 = list.copy(origin_list)
+new_list_3 = list.copy(origin_list)
+all_list = origin_list + new_list_0 + new_list_1 + new_list_2 + new_list_3
+np.random.shuffle(all_list)
+class_2_training_data = np.asarray(all_list)
+print(len(class_2_training_data))
+
+Augmented_ALL_DATA_NUM = len(class_0_training_data) + len(class_1_training_data) + len(class_2_training_data)
+print("Augmented_All_Data_Num: ", Augmented_ALL_DATA_NUM)
 
 print("Length of class_0 test data: ", len(class_0_testing_data))
 print("Length of class_1 test data: ", len(class_1_testing_data))
@@ -119,11 +138,6 @@ print("Length of class_2 test data: ", len(class_2_testing_data))
 X_test = np.concatenate((class_0_testing_data, class_1_testing_data, class_2_testing_data), axis=0)
 y_test = np.concatenate((np.zeros((len(class_0_testing_data), 1)), np.ones((len(class_1_testing_data), 1)),
                          2 * np.ones((len(class_2_testing_data), 1))), axis=0)
-
-X_test_trim = np.concatenate((class_0_testing_trim_data, class_1_testing_trim_data, class_2_testing_trim_data), axis=0)
-y_test_trim = np.concatenate((np.zeros((len(class_0_testing_trim_data), 1)), np.ones((len(class_1_testing_trim_data), 1)),
-                         2 * np.ones((len(class_2_testing_trim_data), 1))), axis=0)
-
 ########################################################################################################
 
 print("Start building networks...")
@@ -146,6 +160,7 @@ from keras.layers.normalization import BatchNormalization
 from keras.layers import LeakyReLU
 from keras.layers import Dropout
 from sklearn.metrics import classification_report
+from keras import regularizers
 from keras.layers import Lambda
 from keras.layers import Activation
 import matplotlib.pyplot as plt
@@ -160,30 +175,31 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=3):
     fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(in_image)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
+    fe = Dropout(0.2)(fe)
 
     fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
+    fe = Dropout(0.2)(fe)
 
     fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
+    fe = Dropout(0.2)(fe)
 
     fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
+    fe = Dropout(0.2)(fe)
 
     # flatten feature maps
     fe = Flatten()(fe)
 
-    # dropout
-    fe = Dropout(0.4)(fe)
-
-    d_out_layer = Dense(1, activation="sigmoid")(fe)
+    d_out_layer = Dense(1, activation="sigmoid", kernel_regularizer=regularizers.l2(0.01))(fe)
     d_model = Model(in_image, d_out_layer)
     d_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5))
 
-    c_out_layer = Dense(n_classes, activation="softmax")(fe)
+    c_out_layer = Dense(n_classes, activation="softmax", kernel_regularizer=regularizers.l2(0.01))(fe)
     c_model = Model(in_image, c_out_layer)
     c_model.compile(loss='sparse_categorical_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
 
@@ -241,11 +257,13 @@ gan_model = define_gan(g_model, d_model)
 print("Start training...")
 
 epoch = 0
+BATCH_NUM = int(Augmented_ALL_DATA_NUM / BATCH_SIZE) + 1
+print("Batch Number: ", BATCH_NUM)
 
 for i in range(ITERATIONS):
     ####generate supervised real data
-    ix = np.random.randint(0, len(class_0_training_data), n_samples)
-    X_supervised_samples_class_0 = np.asarray(class_0_training_data[ix])
+    ix_0 = np.random.randint(0, len(class_0_training_data), n_samples)
+    X_supervised_samples_class_0 = np.asarray(class_0_training_data[ix_0])
     Y_supervised_samples_class_0 = np.zeros((n_samples, 1))
 
     ix = np.random.randint(0, len(class_1_training_data), n_samples)

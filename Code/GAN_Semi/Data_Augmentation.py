@@ -56,10 +56,6 @@ X_with_Class_0_Num = len(list_0)
 X_with_Class_1_Num = len(list_1)
 X_with_Class_2_Num = len(list_2)
 
-print(X_with_Class_0_Num)
-print(X_with_Class_1_Num)
-print(X_with_Class_2_Num)
-
 ALL_DATA_NUM = X_with_Class_0_Num + X_with_Class_1_Num + X_with_Class_2_Num
 
 X_with_Class_0_Train_Num = int(X_with_Class_0_Num * TRAIN_PERC)
@@ -295,4 +291,4 @@ for i in range(ITERATIONS):
         y_pred_bool = np.argmax(y_pred, axis=1)
         print("Length of y_pred: ", len(y_pred))
         print(y_pred_bool)
-        print(classification_report(y_test, y_pred_bool))
+        print(classification_report(y_test_trim, y_pred_bool))

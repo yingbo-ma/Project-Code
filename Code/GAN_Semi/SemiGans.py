@@ -46,7 +46,7 @@ def define_discriminator(in_shape, n_classes):
 	fe = Conv2D(128, (3,3), strides=(2,2), padding='same')(fe)
 	fe = LeakyReLU(alpha=0.2)(fe)
 
-    fe = Conv2D(256, (3,3), strides=(2,2), padding='same')(fe)
+	fe = Conv2D(256, (3,3), strides=(2,2), padding='same')(fe)
 	fe = LeakyReLU(alpha=0.2)(fe)
 
 	# flatten feature maps
@@ -55,13 +55,13 @@ def define_discriminator(in_shape, n_classes):
 	fe = Dropout(0.4)(fe)
 
 	# output layer nodes
-    d_out_layer = Dense(1, activation="sigmoid")(fe)
-    d_model = Model(in_image, d_out_layer)
+	d_out_layer = Dense(1, activation="sigmoid")(fe)
+	d_model = Model(in_image, d_out_layer)
 	d_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5))
 
-    c_out_layer = Dense(n_classes, activation=custom_activation)(fe)
-    c_model = Model(in_image, c_out_layer)
-    c_model.compile(loss='sparse_categorical_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
+	c_out_layer = Dense(n_classes, activation=custom_activation)(fe)
+	c_model = Model(in_image, c_out_layer)
+	c_model.compile(loss='sparse_categorical_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
 
 	return d_model, c_model
 
