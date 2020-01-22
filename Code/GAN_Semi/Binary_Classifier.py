@@ -58,10 +58,12 @@ for index in range(X_with_Class_0_Num):
     image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
     class_0_data.append(np.asarray(image))
 
-# class_0_data = class_0_data[0 : 900]
 print(len(class_0_data))
 
 class_0_data = np.reshape(class_0_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+
+class_0_data = class_0_data[0 : 900]
+print(len(class_0_data))
 
 class_1_data = []
 for index in range(X_with_Class_1_Num):
@@ -159,7 +161,6 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
 
     return d_model, c_model
 
-
 # define the generator model
 def define_generator(latent_dim):
     # image generator input
@@ -255,7 +256,7 @@ for i in range(ITERATIONS):
         _, test_acc = c_model.evaluate(X_test, y_test, verbose=0)
         print(f"Epoch {epoch}, c model accuracy on test data: {test_acc}")
         y_pred = c_model.predict(X_test, batch_size=60, verbose=0)
-
+        
         pred_list = y_pred.tolist()
 
         for i in range(len(pred_list)):

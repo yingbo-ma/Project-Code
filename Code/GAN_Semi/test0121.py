@@ -3,13 +3,13 @@ import os
 from PIL import Image
 import numpy as np
 
-label_path = r"D:\Data\LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
+label_path = r"D:\Data\LD2_PKYonge_Class1_Mar142019_B\new_label.xlsx"
 DATA_PATH = r"D:\Data\LD2_PKYonge_Class1_Mar142019_B\Image_Data"
 
 GENERATE_SQUARE = 64
 IMAGE_CHANNELS = 3
 TRAIN_PERC = 0.75
-CLASS_NUM = 2
+CLASS_NUM = 3
 BATCH_SIZE = 60
 n_samples = int(BATCH_SIZE / CLASS_NUM)
 latent_dim = 100
@@ -47,10 +47,16 @@ for i, j in enumerate(list):
     if j == 1:
         list_1.append(i)
 
+list_2 = []
+for i, j in enumerate(list):
+    if j == 2:
+        list_2.append(i)
+
 X_with_Class_0_Num = len(list_0)
 X_with_Class_1_Num = len(list_1)
+X_with_Class_2_Num = len(list_2)
 
-ALL_DATA_NUM = X_with_Class_0_Num + X_with_Class_1_Num
+ALL_DATA_NUM = X_with_Class_0_Num + X_with_Class_1_Num + X_with_Class_2_Num
 
 class_0_data = []
 for index in range(X_with_Class_0_Num):
@@ -58,10 +64,12 @@ for index in range(X_with_Class_0_Num):
     image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
     class_0_data.append(np.asarray(image))
 
-# class_0_data = class_0_data[0 : 900]
 print(len(class_0_data))
 
 class_0_data = np.reshape(class_0_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+
+class_0_data = class_0_data[0 : 500]
+print(len(class_0_data))
 
 class_1_data = []
 for index in range(X_with_Class_1_Num):
@@ -73,13 +81,27 @@ print(len(class_1_data))
 
 class_1_data = np.reshape(class_1_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
 
+class_2_data = []
+for index in range(X_with_Class_2_Num):
+    path = os.path.join(DATA_PATH, str(list_2[index]) + ".jpg")
+    image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
+    class_2_data.append(np.asarray(image))
+
+print(len(class_2_data))
+
+class_2_data = np.reshape(class_2_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+
+Augmented_ALL_DATA_NUM = len(class_0_data) + len(class_1_data) + len(class_2_data)
+
 ######split data into training and testing##################################################################
 
 np.random.shuffle(class_0_data)
 np.random.shuffle(class_1_data)
+np.random.shuffle(class_2_data)
 
 X_with_Class_0_Train_Num = int(len(class_0_data) * TRAIN_PERC)
 X_with_Class_1_Train_Num = int(len(class_1_data) * TRAIN_PERC)
+X_with_Class_2_Train_Num = int(len(class_2_data) * TRAIN_PERC)
 
 class_0_training_data = class_0_data[0: X_with_Class_0_Train_Num]
 class_0_testing_data = class_0_data[X_with_Class_0_Train_Num:]
@@ -87,11 +109,16 @@ class_0_testing_data = class_0_data[X_with_Class_0_Train_Num:]
 class_1_training_data = class_1_data[0: X_with_Class_1_Train_Num]
 class_1_testing_data = class_1_data[X_with_Class_1_Train_Num:]
 
+class_2_training_data = class_2_data[0: X_with_Class_2_Train_Num]
+class_2_testing_data = class_2_data[X_with_Class_2_Train_Num:]
+
 print("Length of class_0 test data: ", len(class_0_testing_data))
 print("Length of class_1 test data: ", len(class_1_testing_data))
+print("Length of class_2 test data: ", len(class_2_testing_data))
 
-X_test = np.concatenate((class_0_testing_data, class_1_testing_data), axis=0)
-y_test = np.concatenate((np.zeros((len(class_0_testing_data), 1)), np.ones((len(class_1_testing_data), 1))), axis=0)
+X_test = np.concatenate((class_0_testing_data, class_1_testing_data, class_2_testing_data), axis=0)
+y_test = np.concatenate((np.zeros((len(class_0_testing_data), 1)), np.ones((len(class_1_testing_data), 1)),
+                         2 * np.ones((len(class_2_testing_data), 1))), axis=0)
 ########################################################################################################
 
 print("Start building networks...")
@@ -122,7 +149,7 @@ from keras import backend
 
 
 # define supervised and unsupervised discriminator models
-def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
+def define_discriminator(in_shape=(64, 64, 3), n_classes=3):
     # image input
     in_image = Input(shape=in_shape)
     # downsample
@@ -153,9 +180,9 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
     d_model = Model(in_image, d_out_layer)
     d_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5))
 
-    c_out_layer = Dense(1, activation="sigmoid", kernel_regularizer=regularizers.l2(0.01))(fe)
+    c_out_layer = Dense(n_classes, activation="softmax", kernel_regularizer=regularizers.l2(0.01))(fe)
     c_model = Model(in_image, c_out_layer)
-    c_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
+    c_model.compile(loss='sparse_categorical_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
 
     return d_model, c_model
 
@@ -211,6 +238,8 @@ gan_model = define_gan(g_model, d_model)
 print("Start training...")
 
 epoch = 0
+BATCH_NUM = int(Augmented_ALL_DATA_NUM / BATCH_SIZE) + 1
+print("Batch Number: ", BATCH_NUM)
 
 for i in range(ITERATIONS):
     ####generate supervised real data
@@ -222,10 +251,14 @@ for i in range(ITERATIONS):
     X_supervised_samples_class_1 = np.asarray(class_1_training_data[ix])
     Y_supervised_samples_class_1 = np.ones((n_samples, 1))
 
+    ix = np.random.randint(0, len(class_2_training_data), n_samples)
+    X_supervised_samples_class_2 = np.asarray(class_2_training_data[ix])
+    Y_supervised_samples_class_2 = 2 * np.ones((n_samples, 1))
+
     Xsup_real = np.concatenate(
-        (X_supervised_samples_class_0, X_supervised_samples_class_1), axis=0)
+        (X_supervised_samples_class_0, X_supervised_samples_class_1, X_supervised_samples_class_2), axis=0)
     ysup_real = np.concatenate(
-        (Y_supervised_samples_class_0, Y_supervised_samples_class_1), axis=0)
+        (Y_supervised_samples_class_0, Y_supervised_samples_class_1, Y_supervised_samples_class_2), axis=0)
     ####generate unsupervised real data
     ix = np.random.randint(0, len(class_0_training_data), n_samples)
     X_unsupervised_samples_class_0 = np.asarray(class_0_training_data[ix])
@@ -233,8 +266,11 @@ for i in range(ITERATIONS):
     ix = np.random.randint(0, len(class_1_training_data), n_samples)
     X_unsupervised_samples_class_1 = np.asarray(class_1_training_data[ix])
 
+    ix = np.random.randint(0, len(class_2_training_data), n_samples)
+    X_unsupervised_samples_class_2 = np.asarray(class_2_training_data[ix])
+
     X_real = np.concatenate(
-        (X_unsupervised_samples_class_0, X_unsupervised_samples_class_1), axis=0)
+        (X_unsupervised_samples_class_0, X_unsupervised_samples_class_1, X_unsupervised_samples_class_2), axis=0)
     y_real = np.ones((BATCH_SIZE, 1))
     ##generate fake data
     seed = np.random.normal(0, 1, (BATCH_SIZE, latent_dim))
@@ -244,26 +280,18 @@ for i in range(ITERATIONS):
     # update supervised discriminator (c)
     c_loss, c_acc = c_model.train_on_batch(Xsup_real, ysup_real)
     # update unsupervised discriminator (d)
-    # d_loss1 = d_model.train_on_batch(X_real, y_real)
-    # d_loss2 = d_model.train_on_batch(X_fake, y_fake)
+    d_loss1 = d_model.train_on_batch(X_real, y_real)
+    d_loss2 = d_model.train_on_batch(X_fake, y_fake)
     # update generator (g)
-    # g_loss = gan_model.train_on_batch(seed, y_real)
+    g_loss = gan_model.train_on_batch(seed, y_real)
 
     if (i + 1) % (BATCH_NUM * 1) == 0:
         epoch += 1
-        print(f"Epoch {epoch}, c model accuracy on training data: {c_acc}")
+        print(f"Epoch {epoch}, c model accuarcy on training data: {c_acc}")
         _, test_acc = c_model.evaluate(X_test, y_test, verbose=0)
-        print(f"Epoch {epoch}, c model accuracy on test data: {test_acc}")
+        print(f"Epoch {epoch}, c model accuarcy on test data: {test_acc}")
         y_pred = c_model.predict(X_test, batch_size=60, verbose=0)
-
-        pred_list = y_pred.tolist()
-
-        for i in range(len(pred_list)):
-            if pred_list[i] > [0.5]:
-                pred_list[i] = [1]
-            else:
-                pred_list[i] = [0]
-
-        y_pred = np.asarray(pred_list)
+        y_pred_bool = np.argmax(y_pred, axis=1)
         print("Length of y_pred: ", len(y_pred))
-        print(classification_report(y_test, y_pred))
+        print(y_pred_bool)
+        print(classification_report(y_test, y_pred_bool))
