@@ -1,9 +1,9 @@
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 
-audio_path = "/home/yingbo/Desktop/LD2_PKYonge_Class1_Mar142019_B.wav"
+audio_path = r"D:\Data\LD14_PKYonge_Class1_Mar142019\Audio\LD14_PKYonge_Class1_Mar142019.wav"
 
-myaudio = AudioSegment.from_file(audio_path , "wav") 
+myaudio = AudioSegment.from_file(audio_path)
 chunk_length_ms = 1000 # pydub calculates in millisec
 chunks = make_chunks(myaudio, chunk_length_ms) #Make chunks of one sec
 

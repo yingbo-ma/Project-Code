@@ -293,6 +293,5 @@ for i in range(ITERATIONS):
         print(f"Epoch {epoch}, c model accuarcy on test data: {test_acc}")
         y_pred = c_model.predict(X_test, batch_size=60, verbose=0)
         y_pred_bool = np.argmax(y_pred, axis=1)
-        print("Length of y_pred: ", len(y_pred))
         print(y_pred_bool)
         print(classification_report(y_test, y_pred_bool))

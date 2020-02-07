@@ -1,12 +1,10 @@
 import os
 import re
-
 import matplotlib.pyplot as plt
-import numpy as np
 import librosa.display
 from natsort import natsorted
 
-folder_path = "/home/yingbo/FLECKS/Data/AudioClips/LD2_PKYonge_Class1_Mar142019_B/25/"
+folder_path = r"D:\Data\LD14_PKYonge_Class1_Mar142019\AudioClips\LD14_PKYonge_Class1_Mar142019\22"
 files = os.listdir(folder_path)
 files = natsorted(files)
 
@@ -25,4 +23,4 @@ for i in files:
     num = int(temp[0])
     
     print("Saving STFT image %d.wav .."%(num))
-    plt.savefig("/home/yingbo/FLECKS/Data/AudioClips/LD2_PKYonge_Class1_Mar142019_B/ImageData/25/%d.jpg"%(num), bbox_inches='tight', pad_inches=0)
+    plt.savefig(r"D:\Data\LD14_PKYonge_Class1_Mar142019\Image_Data\22\%d.jpg"%(num), bbox_inches='tight', pad_inches=0)
