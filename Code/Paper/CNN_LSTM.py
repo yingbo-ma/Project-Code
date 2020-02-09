@@ -129,6 +129,8 @@ X_test = data[Train_Num : ]
 y_train = target[0 : Train_Num]
 y_test = target[Train_Num : ]
 
+final_test = label_list[Train_Num : ]
+
 ########################################################################################
 
 print("Start training...")
@@ -144,39 +146,29 @@ for i in range(ITERATIONS):
     # update supervised discriminator (c)
     c_loss, c_acc = cnn_lstm.train_on_batch(X_supervised_samples, Y_supervised_samples)
 
-    # if (i + 1) % (BATCH_NUM * 1) == 0:
-    #     epoch += 1
-    #     print(f"Epoch {epoch}, c model accuracy on training data: {c_acc}")
-    #     _, test_acc = cnn_lstm.evaluate(X_test, y_test, verbose=0)
-    #     print(f"Epoch {epoch}, c model accuracy on test data: {test_acc}")
-    #     y_pred = cnn_lstm.predict(X_test, batch_size=60, verbose=0)
-    #
-    #     pred_list = y_pred.tolist()
-    #
-    #     for i in range(len(pred_list)):
-    #         if pred_list[i] > [0.5]:
-    #             pred_list[i] = [1]
-    #         else:
-    #             pred_list[i] = [0]
-    #
-    #     y_pred = np.asarray(pred_list)
-    #     print("Length of y_pred: ", len(y_pred))
-    #     print(classification_report(y_test, y_pred))
+    if (i + 1) % (BATCH_NUM * 1) == 0:
+        epoch += 1
+        print(f"Epoch {epoch}, c model accuracy on training data: {c_acc}")
+        _, test_acc = cnn_lstm.evaluate(X_test, y_test, verbose=0)
+        print(f"Epoch {epoch}, c model accuracy on test data: {test_acc}")
+        y_pred = cnn_lstm.predict(X_test, batch_size=60, verbose=0)
 
-    epoch += 1
-    print(f"Epoch {epoch}, c model accuracy on training data: {c_acc}")
-    _, test_acc = cnn_lstm.evaluate(X_test, y_test, verbose=0)
-    print(f"Epoch {epoch}, c model accuracy on test data: {test_acc}")
-    y_pred = cnn_lstm.predict(X_test, batch_size=60, verbose=0)
+        pred_list = y_pred.tolist()
 
-    pred_list = y_pred.tolist()
+        for i in range(len(pred_list)):
+            for j in range(5):
+                if pred_list[i][j] > [0.5]:
+                    pred_list[i][j] = [1]
+                else:
+                    pred_list[i][j] = [0]
 
-    for i in range(len(pred_list)):
-         if pred_list[i] > [0.5]:
-            pred_list[i] = [1]
-         else:
-            pred_list[i] = [0]
+        final_pred_list = []
+        for i in range(len(pred_list)):
+            final_pred_list.append(pred_list[i][0][0])
+        final_pred_list.append(pred_list[i][1][0])
+        final_pred_list.append(pred_list[i][2][0])
+        final_pred_list.append(pred_list[i][3][0])
+        final_pred_list.append(pred_list[i][4][0])
 
-    y_pred = np.asarray(pred_list)
-    print("Length of y_pred: ", len(y_pred))
-    print(classification_report(y_test, y_pred))
+        final_pred = np.asarray(final_pred_list)
+        print(classification_report(final_test, final_pred_list))
