@@ -1,13 +1,5 @@
-# from keras.backend.tensorflow_backend import set_session
-# import tensorflow as tf
-# config = tf.ConfigProto()
-# config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
-# config.log_device_placement = True  # to log device placement (on which device the operation ran)
-# sess = tf.Session(config=config)
-# set_session(sess)  # set this TensorFlow session as the default session for Keras
-
-import os
 import xlrd
+import os
 from PIL import Image
 import numpy as np
 
@@ -70,7 +62,7 @@ print(len(class_0_data))
 
 class_0_data = np.reshape(class_0_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
 
-class_0_data = class_0_data[0 : 900]
+class_0_data = class_0_data[0: 900]
 print(len(class_0_data))
 
 class_1_data = []
@@ -105,13 +97,8 @@ y_test = np.concatenate((np.zeros((len(class_0_testing_data), 1)), np.ones((len(
 ########################################################################################################
 
 print("Start building networks...")
-from numpy import expand_dims
-from numpy import zeros
-from numpy import ones
-from numpy import asarray
+
 from numpy.random import randn
-from numpy.random import randint
-from keras.datasets.mnist import load_data
 from keras.optimizers import Adam
 from keras.models import Model
 from keras.layers import Input
@@ -125,10 +112,6 @@ from keras.layers import LeakyReLU
 from keras.layers import Dropout
 from sklearn.metrics import classification_report
 from keras import regularizers
-from keras.layers import Lambda
-from keras.layers import Activation
-import matplotlib.pyplot as plt
-from keras import backend
 
 
 # define supervised and unsupervised discriminator models
@@ -159,63 +142,14 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
     # flatten feature maps
     fe = Flatten()(fe)
 
-    d_out_layer = Dense(1, activation="sigmoid", kernel_regularizer=regularizers.l2(0.01))(fe)
-    d_model = Model(in_image, d_out_layer)
-    d_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5))
-
     c_out_layer = Dense(1, activation="sigmoid", kernel_regularizer=regularizers.l2(0.01))(fe)
     c_model = Model(in_image, c_out_layer)
     c_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
 
-    return d_model, c_model
-
-# define the generator model
-def define_generator(latent_dim):
-    # image generator input
-    in_lat = Input(shape=(latent_dim,))
-
-    n_nodes = 128 * 8 * 8
-    gen = Dense(n_nodes)(in_lat)
-    gen = LeakyReLU(alpha=0.2)(gen)
-    gen = Reshape((8, 8, 128))(gen)
-
-    gen = Conv2DTranspose(128, (4, 4), strides=(2, 2), padding='same')(gen)
-    gen = LeakyReLU(alpha=0.2)(gen)
-
-    gen = Conv2DTranspose(128, (4, 4), strides=(2, 2), padding='same')(gen)
-    gen = LeakyReLU(alpha=0.2)(gen)
-
-    gen = Conv2DTranspose(128, (4, 4), strides=(2, 2), padding='same')(gen)
-    gen = LeakyReLU(alpha=0.2)(gen)
-
-    out_layer = Conv2D(3, (7, 7), activation='tanh', padding='same')(gen)
-
-    # define model
-    model = Model(in_lat, out_layer)
-    return model
+    return c_model
 
 
-# define the combined generator and discriminator model, for updating the generator
-def define_gan(g_model, d_model):
-    # make weights in the discriminator not trainable
-    d_model.trainable = False
-    # connect image output from generator as input to discriminator
-    gan_output = d_model(g_model.output)
-    # define gan model as taking noise and outputting a classification
-    model = Model(g_model.input, gan_output)
-
-    # compile model
-    opt = Adam(lr=0.0002, beta_1=0.5)
-    model.compile(loss='binary_crossentropy', optimizer=opt)
-    return model
-
-
-# create the discriminator models
-d_model, c_model = define_discriminator()
-# create the generator
-g_model = define_generator(latent_dim)
-# create the gan
-gan_model = define_gan(g_model, d_model)
+c_model = define_discriminator()
 
 print("Start training...")
 
@@ -235,28 +169,9 @@ for i in range(ITERATIONS):
         (X_supervised_samples_class_0, X_supervised_samples_class_1), axis=0)
     ysup_real = np.concatenate(
         (Y_supervised_samples_class_0, Y_supervised_samples_class_1), axis=0)
-    ####generate unsupervised real data
-    ix = np.random.randint(0, len(class_0_training_data), n_samples)
-    X_unsupervised_samples_class_0 = np.asarray(class_0_training_data[ix])
-
-    ix = np.random.randint(0, len(class_1_training_data), n_samples)
-    X_unsupervised_samples_class_1 = np.asarray(class_1_training_data[ix])
-
-    X_real = np.concatenate(
-        (X_unsupervised_samples_class_0, X_unsupervised_samples_class_1), axis=0)
-    y_real = np.ones((BATCH_SIZE, 1))
-    ##generate fake data
-    seed = np.random.normal(0, 1, (BATCH_SIZE, latent_dim))
-    X_fake = g_model.predict(seed)
-    y_fake = np.zeros((BATCH_SIZE, 1))
 
     # update supervised discriminator (c)
     c_loss, c_acc = c_model.train_on_batch(Xsup_real, ysup_real)
-    # update unsupervised discriminator (d)
-    # d_loss1 = d_model.train_on_batch(X_real, y_real)
-    # d_loss2 = d_model.train_on_batch(X_fake, y_fake)
-    # update generator (g)
-    # g_loss = gan_model.train_on_batch(seed, y_real)
 
     if (i + 1) % (BATCH_NUM * 1) == 0:
         epoch += 1
@@ -264,7 +179,7 @@ for i in range(ITERATIONS):
         _, test_acc = c_model.evaluate(X_test, y_test, verbose=0)
         print(f"Epoch {epoch}, c model accuracy on test data: {test_acc}")
         y_pred = c_model.predict(X_test, batch_size=60, verbose=0)
-        
+
         pred_list = y_pred.tolist()
 
         for i in range(len(pred_list)):
