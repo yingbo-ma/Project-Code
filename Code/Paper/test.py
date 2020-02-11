@@ -14,19 +14,9 @@ TRAIN_PERC = 0.75
 BATCH_SIZE = 12
 IMAGE_NUM = 2574
 BATCH_NUM = int(IMAGE_NUM / BATCH_SIZE) + 1
-ITERATIONS = 3000
+ITERATIONS = 2000
 
 cnn = Sequential()
-cnn.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
-cnn.add(BatchNormalization(momentum=0.9))
-cnn.add(LeakyReLU(alpha=0.2))
-cnn.add(Dropout(0.2))
-
-cnn.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
-cnn.add(BatchNormalization(momentum=0.9))
-cnn.add(LeakyReLU(alpha=0.2))
-cnn.add(Dropout(0.2))
-
 cnn.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
 cnn.add(BatchNormalization(momentum=0.9))
 cnn.add(LeakyReLU(alpha=0.2))
@@ -42,7 +32,9 @@ cnn.add(Flatten())
 cnn_lstm = Sequential()
 
 cnn_lstm.add(TimeDistributed(cnn, input_shape=(num_timesteps, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS)))
-cnn_lstm.add(LSTM((50), return_sequences=True))
+cnn_lstm.add(LSTM((num_timesteps), return_sequences=True))
+cnn_lstm.add(Dropout(0.2))
+cnn_lstm.add(LSTM((num_timesteps), return_sequences=True))
 cnn_lstm.add(Dropout(0.2))
 cnn_lstm.add(Dense(1, activation="sigmoid", kernel_regularizer=regularizers.l2(0.01)))
 
@@ -136,7 +128,6 @@ final_test = label_list[Train_Num : ]
 print("Start training...")
 
 epoch = 0
-BATCH_NUM = int(len(X_train) / BATCH_SIZE) + 1
 
 for i in range(ITERATIONS):
 
@@ -157,7 +148,7 @@ for i in range(ITERATIONS):
         pred_list = y_pred.tolist()
 
         for i in range(len(pred_list)):
-            for j in range(5):
+            for j in range(num_timesteps):
                 if pred_list[i][j] > [0.5]:
                     pred_list[i][j] = [1]
                 else:
@@ -170,6 +161,9 @@ for i in range(ITERATIONS):
         final_pred_list.append(pred_list[i][2][0])
         final_pred_list.append(pred_list[i][3][0])
         final_pred_list.append(pred_list[i][4][0])
+
+        print(final_pred_list)
+        print(final_test)
 
         final_pred = np.asarray(final_pred_list)
         print(classification_report(final_test, final_pred_list))

@@ -15,7 +15,7 @@ n_samples = int(BATCH_SIZE / CLASS_NUM)
 latent_dim = 100
 IMAGE_NUM = 2574
 BATCH_NUM = int(IMAGE_NUM / BATCH_SIZE) + 1
-ITERATIONS = 2000
+ITERATIONS = 3000
 
 
 ### get the all data for 3 classes ######################################################################################################
@@ -62,7 +62,6 @@ print(len(class_0_data))
 
 class_0_data = np.reshape(class_0_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
 
-class_0_data = class_0_data[0: 900]
 print(len(class_0_data))
 
 class_1_data = []
@@ -91,6 +90,8 @@ class_1_testing_data = class_1_data[X_with_Class_1_Train_Num:]
 
 print("Length of class_0 test data: ", len(class_0_testing_data))
 print("Length of class_1 test data: ", len(class_1_testing_data))
+
+X_train = np.concatenate((class_0_data, class_1_data), axis=0)
 
 X_test = np.concatenate((class_0_testing_data, class_1_testing_data), axis=0)
 y_test = np.concatenate((np.zeros((len(class_0_testing_data), 1)), np.ones((len(class_1_testing_data), 1))), axis=0)
@@ -154,6 +155,7 @@ c_model = define_discriminator()
 print("Start training...")
 
 epoch = 0
+BATCH_NUM = int(len(X_train) / BATCH_SIZE) + 1
 
 for i in range(ITERATIONS):
     ####generate supervised real data
