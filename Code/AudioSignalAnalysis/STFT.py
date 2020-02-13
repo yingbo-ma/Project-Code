@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import librosa.display
 
-audio_path = "/home/yingbo/FLECKS/Data/AudioClips/LD2_PKYonge_Class1_Mar142019_B/25/2500.wav"
+audio_path = r"D:\Data\LD2_PKYonge_Class1_Mar142019_B\AudioClips\LD2_PKYonge_Class1_Mar142019_B\22\2299.wav"
 
 (x, sr) = librosa.load(audio_path)
 

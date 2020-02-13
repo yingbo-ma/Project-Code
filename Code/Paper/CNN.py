@@ -120,7 +120,12 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
     # image input
     in_image = Input(shape=in_shape)
     # downsample
-    fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(in_image)
+    fe = Conv2D(32, (3, 3), strides=(2, 2), padding='same')(in_image)
+    fe = BatchNormalization(momentum=0.9)(fe)
+    fe = LeakyReLU(alpha=0.2)(fe)
+    fe = Dropout(0.2)(fe)
+
+    fe = Conv2D(64, (3, 3), strides=(2, 2), padding='same')(fe)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
     fe = Dropout(0.2)(fe)
@@ -130,12 +135,7 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
     fe = LeakyReLU(alpha=0.2)(fe)
     fe = Dropout(0.2)(fe)
 
-    fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe)
-    fe = BatchNormalization(momentum=0.9)(fe)
-    fe = LeakyReLU(alpha=0.2)(fe)
-    fe = Dropout(0.2)(fe)
-
-    fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe)
+    fe = Conv2D(256, (3, 3), strides=(2, 2), padding='same')(fe)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
     fe = Dropout(0.2)(fe)
@@ -151,6 +151,7 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
 
 
 c_model = define_discriminator()
+c_model.summary()
 
 print("Start training...")
 
