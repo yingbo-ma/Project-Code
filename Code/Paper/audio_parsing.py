@@ -3,7 +3,7 @@ import os
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 
-AudioPath = r"D:\Data_NC_State\TU409-10B\Audio\TU409-10B.wav"
+AudioPath = r"D:\Data\Data_NC_State\Pair-2-AM\Audio\Pair-2-AM.wav"
 
 af = os.path.abspath(os.path.dirname(__file__)) + "_AudioFrames"
 si = os.path.abspath(os.path.dirname(__file__)) + "_SpectralImages"

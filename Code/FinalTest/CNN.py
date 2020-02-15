@@ -3,17 +3,19 @@ import os
 from PIL import Image
 import numpy as np
 
-label_path = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
-DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+test_label_path = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
+test_DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+
+train_label_path = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
+train_DATA_PATH = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
 
 GENERATE_SQUARE = 64
 IMAGE_CHANNELS = 3
-TRAIN_PERC = 0.75
 CLASS_NUM = 2
-BATCH_SIZE = 60
+BATCH_SIZE = 100
 n_samples = int(BATCH_SIZE / CLASS_NUM)
 latent_dim = 100
-IMAGE_NUM = 2574
+IMAGE_NUM = 2197
 BATCH_NUM = int(IMAGE_NUM / BATCH_SIZE) + 1
 ITERATIONS = 3000
 
@@ -34,67 +36,91 @@ def excel_data(file_path):
     return excel_list
 
 
-print("Start reading Image & Label data...")
-list = excel_data(label_path)
+print("Start reading training Image & Label data...")
 
-list_0 = []
-for i, j in enumerate(list):
+train_list = excel_data(train_label_path)
+
+train_list_0 = []
+for i, j in enumerate(train_list):
     if j == 0:
-        list_0.append(i)
+        train_list_0.append(i)
 
-list_1 = []
-for i, j in enumerate(list):
+train_list_1 = []
+for i, j in enumerate(train_list):
     if j == 1:
-        list_1.append(i)
+        train_list_1.append(i)
 
-X_with_Class_0_Num = len(list_0)
-X_with_Class_1_Num = len(list_1)
-
-ALL_DATA_NUM = X_with_Class_0_Num + X_with_Class_1_Num
-
-class_0_data = []
-for index in range(X_with_Class_0_Num):
-    path = os.path.join(DATA_PATH, str(list_0[index]) + ".jpg")
+train_class_0_data = []
+for index in range(len(train_list_0)):
+    path = os.path.join(train_DATA_PATH, str(train_list_0[index]) + ".jpg")
     image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
-    class_0_data.append(np.asarray(image))
+    train_class_0_data.append(np.asarray(image))
 
-print(len(class_0_data))
+print(len(train_class_0_data))
 
-class_0_data = np.reshape(class_0_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+train_class_0_data = np.reshape(train_class_0_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+train_class_0_data = train_class_0_data[0 : 900]
+print(len(train_class_0_data))
 
-print(len(class_0_data))
+# we can cut some 0 data here to improve training performance
 
-class_1_data = []
-for index in range(X_with_Class_1_Num):
-    path = os.path.join(DATA_PATH, str(list_1[index]) + ".jpg")
+train_class_1_data = []
+for index in range(len(train_list_1)):
+    path = os.path.join(train_DATA_PATH, str(train_list_1[index]) + ".jpg")
     image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
-    class_1_data.append(np.asarray(image))
+    train_class_1_data.append(np.asarray(image))
 
-print(len(class_1_data))
+print(len(train_class_1_data))
 
-class_1_data = np.reshape(class_1_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+train_class_1_data = np.reshape(train_class_1_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
 
-######split data into training and testing##################################################################
+train_data = np.concatenate((train_class_0_data, train_class_1_data), axis=0)
 
-np.random.shuffle(class_0_data)
-np.random.shuffle(class_1_data)
+print(train_data.shape)
 
-X_with_Class_0_Train_Num = int(len(class_0_data) * TRAIN_PERC)
-X_with_Class_1_Train_Num = int(len(class_1_data) * TRAIN_PERC)
+########################################################################################################
+print("Start reading testing Image & Label data...")
 
-class_0_training_data = class_0_data[0: X_with_Class_0_Train_Num]
-class_0_testing_data = class_0_data[X_with_Class_0_Train_Num:]
+test_list = excel_data(test_label_path)
 
-class_1_training_data = class_1_data[0: X_with_Class_1_Train_Num]
-class_1_testing_data = class_1_data[X_with_Class_1_Train_Num:]
+test_list_0 = []
+for i, j in enumerate(test_list):
+    if j == 0:
+        test_list_0.append(i)
 
-print("Length of class_0 test data: ", len(class_0_testing_data))
-print("Length of class_1 test data: ", len(class_1_testing_data))
+test_list_1 = []
+for i, j in enumerate(test_list):
+    if j == 1:
+        test_list_1.append(i)
 
-X_train = np.concatenate((class_0_data, class_1_data), axis=0)
+test_class_0_data = []
+for index in range(len(test_list_0)):
+    path = os.path.join(test_DATA_PATH, str(test_list_0[index]) + ".jpg")
+    image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
+    test_class_0_data.append(np.asarray(image))
 
-X_test = np.concatenate((class_0_testing_data, class_1_testing_data), axis=0)
-y_test = np.concatenate((np.zeros((len(class_0_testing_data), 1)), np.ones((len(class_1_testing_data), 1))), axis=0)
+print(len(test_class_0_data))
+
+test_class_0_data = np.reshape(test_class_0_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+
+# we can cut some 0 data here to improve training performance
+
+test_class_1_data = []
+for index in range(len(test_list_1)):
+    path = os.path.join(test_DATA_PATH, str(test_list_1[index]) + ".jpg")
+    image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
+    test_class_1_data.append(np.asarray(image))
+
+print(len(test_class_1_data))
+
+test_class_1_data = np.reshape(test_class_1_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+
+test_data = np.concatenate((test_class_0_data, test_class_1_data), axis=0)
+y_test = np.concatenate((np.zeros((len(test_class_0_data), 1)), np.ones((len(test_class_1_data), 1))), axis=0)
+
+print(test_data.shape)
+
+
 ########################################################################################################
 
 print("Start building networks...")
@@ -104,10 +130,8 @@ from keras.optimizers import Adam
 from keras.models import Model
 from keras.layers import Input
 from keras.layers import Dense
-from keras.layers import Reshape
 from keras.layers import Flatten
 from keras.layers import Conv2D
-from keras.layers import Conv2DTranspose
 from keras.layers.normalization import BatchNormalization
 from keras.layers import LeakyReLU
 from keras.layers import Dropout
@@ -156,16 +180,15 @@ c_model.summary()
 print("Start training...")
 
 epoch = 0
-BATCH_NUM = int(len(X_train) / BATCH_SIZE) + 1
 
 for i in range(ITERATIONS):
     ####generate supervised real data
-    ix = np.random.randint(0, len(class_0_training_data), n_samples)
-    X_supervised_samples_class_0 = np.asarray(class_0_training_data[ix])
+    ix = np.random.randint(0, len(train_class_0_data), n_samples)
+    X_supervised_samples_class_0 = np.asarray(train_class_0_data[ix])
     Y_supervised_samples_class_0 = np.zeros((n_samples, 1))
 
-    ix = np.random.randint(0, len(class_1_training_data), n_samples)
-    X_supervised_samples_class_1 = np.asarray(class_1_training_data[ix])
+    ix = np.random.randint(0, len(train_class_1_data), n_samples)
+    X_supervised_samples_class_1 = np.asarray(train_class_1_data[ix])
     Y_supervised_samples_class_1 = np.ones((n_samples, 1))
 
     Xsup_real = np.concatenate(
@@ -179,9 +202,9 @@ for i in range(ITERATIONS):
     if (i + 1) % (BATCH_NUM * 1) == 0:
         epoch += 1
         print(f"Epoch {epoch}, c model accuracy on training data: {c_acc}")
-        _, test_acc = c_model.evaluate(X_test, y_test, verbose=0)
+        _, test_acc = c_model.evaluate(test_data, y_test, verbose=0)
         print(f"Epoch {epoch}, c model accuracy on test data: {test_acc}")
-        y_pred = c_model.predict(X_test, batch_size=60, verbose=0)
+        y_pred = c_model.predict(test_data, batch_size=60, verbose=0)
 
         pred_list = y_pred.tolist()
 

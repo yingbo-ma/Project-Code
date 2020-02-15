@@ -13,7 +13,6 @@ num_timesteps = 5
 TRAIN_PERC = 0.75
 BATCH_SIZE = 12
 IMAGE_NUM = 2574
-BATCH_NUM = int(IMAGE_NUM / BATCH_SIZE) + 1
 ITERATIONS = 3000
 
 cnn = Sequential()
@@ -56,8 +55,8 @@ import os
 from PIL import Image
 import numpy as np
 
-label_path = r"D:\Data\LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
-DATA_PATH = r"D:\Data\LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+label_path = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
+DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
 
 def excel_data(file_path):
     data = xlrd.open_workbook(file_path)
