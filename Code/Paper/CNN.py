@@ -3,8 +3,8 @@ import os
 from PIL import Image
 import numpy as np
 
-label_path = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
-DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+label_path = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
+DATA_PATH = r"D:\Data\Data_NC_State\TU409-10B\Image_Data"
 
 GENERATE_SQUARE = 64
 IMAGE_CHANNELS = 3
@@ -120,12 +120,7 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
     # image input
     in_image = Input(shape=in_shape)
     # downsample
-    fe = Conv2D(32, (3, 3), strides=(2, 2), padding='same')(in_image)
-    fe = BatchNormalization(momentum=0.9)(fe)
-    fe = LeakyReLU(alpha=0.2)(fe)
-    fe = Dropout(0.2)(fe)
-
-    fe = Conv2D(64, (3, 3), strides=(2, 2), padding='same')(fe)
+    fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(in_image)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
     fe = Dropout(0.2)(fe)
@@ -135,7 +130,12 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
     fe = LeakyReLU(alpha=0.2)(fe)
     fe = Dropout(0.2)(fe)
 
-    fe = Conv2D(256, (3, 3), strides=(2, 2), padding='same')(fe)
+    fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe)
+    fe = BatchNormalization(momentum=0.9)(fe)
+    fe = LeakyReLU(alpha=0.2)(fe)
+    fe = Dropout(0.2)(fe)
+
+    fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
     fe = Dropout(0.2)(fe)

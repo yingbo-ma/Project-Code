@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import librosa.display
 from natsort import natsorted
 
-folder_path = r"D:\Data\LD14_PKYonge_Class1_Mar142019\AudioClips\LD14_PKYonge_Class1_Mar142019\22"
+folder_path = r"D:\Data\Data_NC_State\TU405-6B\AudioClips\1"
 files = os.listdir(folder_path)
 files = natsorted(files)
 

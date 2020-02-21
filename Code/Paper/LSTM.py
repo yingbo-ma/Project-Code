@@ -9,8 +9,8 @@ TRAIN_PERC = 0.75
 
 SAMPLE_POINTS = 10000
 
-label_path = r"D:\Data\LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
-DATA_PATH = r"D:\Data\LD2_PKYonge_Class1_Mar142019_B\Audio_Data"
+label_path = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
+DATA_PATH = r"D:\Data\Data_NC_State\TU409-10B\Audio_Data"
 
 def excel_data(file_path):
     data = xlrd.open_workbook(file_path)
@@ -81,9 +81,11 @@ print(data.shape)
 Train_Num = int(len(data) * TRAIN_PERC)
 
 X_train = data[0 : Train_Num]
+# X_train = data[0 : 500]
 X_test = data[Train_Num : ]
 
 y_train = target[0 : Train_Num]
+# y_train = target[0 : 500]
 y_test = target[Train_Num : ]
 
 final_test = label_list[Train_Num : ]
@@ -95,8 +97,7 @@ print(len(final_test))
 ########################################################################################
 
 from keras.models import Sequential
-from keras.layers import Conv2D, LeakyReLU, Dropout, Flatten, TimeDistributed, LSTM, Dense, Input
-from keras.layers.normalization import BatchNormalization
+from keras.layers import Dropout, LSTM, Dense
 from keras import regularizers
 from keras.optimizers import Adam
 from sklearn.metrics import classification_report

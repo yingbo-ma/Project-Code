@@ -1,31 +1,17 @@
 #################################################################################################################
 import xlrd
 import os
+from scipy.io import wavfile
 import numpy as np
-from PIL import Image
-
-# test_label_path = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
-# test_DATA_PATH = r"D:\Data\Data_NC_State\TU409-10B\Image_Data"
-#
-# train_label_path = r"D:\Data\Data_NC_State\TU405-6B\binary_label.xlsx"
-# train_DATA_PATH = r"D:\Data\Data_NC_State\TU405-6B\Image_Data"
 
 test_label_path = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
-test_DATA_PATH = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
+test_DATA_PATH = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Audio_Data"
 
 train_label_path = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
-train_DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+train_DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Audio_Data"
 
-GENERATE_SQUARE = 64
-IMAGE_CHANNELS = 3
-CLASS_NUM = 2
-BATCH_SIZE = 12
-n_samples = int(BATCH_SIZE / CLASS_NUM)
-latent_dim = 100
-IMAGE_NUM = 2197
-BATCH_NUM = int(IMAGE_NUM / BATCH_SIZE) + 1
-ITERATIONS = 10000
 num_timesteps = 5
+SAMPLE_POINTS = 5000
 
 
 ### get the all data for 3 classes ######################################################################################################
@@ -65,11 +51,19 @@ print(train_target.shape)
 train_original_data = []
 
 for j in range(len(train_label_list)):
-    path = os.path.join(train_DATA_PATH, str(j) + ".jpg")
-    image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
-    train_original_data.append(np.asarray(image))
+    path = os.path.join(train_DATA_PATH, str(j) + ".wav")
+    (sample_rate, sig) = wavfile.read(path)
+    data_0 = sig[:, 0]
+    # ix = np.random.randint(0, len(data_0), SAMPLE_POINTS)
+    ix = np.arange(0, len(data_0), int((len(data_0) / SAMPLE_POINTS)))
+    audio = data_0[ix] / 100
+    train_original_data.append(np.asarray(audio))
 
-train_original_data = np.reshape(train_original_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+print("the len of train_origin is : ", len(train_original_data[0]))
+print("the len of train_origin is : ", len(train_original_data))
+train_original_data = np.reshape(train_original_data, (-1, SAMPLE_POINTS))
+print("the len of train_origin is : ", len(train_original_data))
+
 
 
 train_data_index = [[[i + j] for i in range(num_timesteps)] for j in range(len(train_original_data) - num_timesteps + 1)]
@@ -85,7 +79,7 @@ for k in train_data_index:
     train_data.append(temp)
 
 train_data.remove([])
-train_data = np.reshape(train_data, (-1, num_timesteps, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+train_data = np.reshape(train_data, (-1, num_timesteps, SAMPLE_POINTS))
 print("training data shape is: ", train_data.shape)
 
 ########################################################################################
@@ -110,11 +104,14 @@ print(test_target.shape)
 test_original_data = []
 
 for j in range(len(test_label_list)):
-    path = os.path.join(test_DATA_PATH, str(j) + ".jpg")
-    image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
-    test_original_data.append(np.asarray(image))
+    path = os.path.join(test_DATA_PATH, str(j) + ".wav")
+    (sample_rate, sig) = wavfile.read(path)
+    data_0 = sig[:, 0]
+    ix = np.random.randint(0, len(data_0), SAMPLE_POINTS)
+    audio = data_0[ix] / 100
+    test_original_data.append(np.asarray(audio))
 
-test_original_data = np.reshape(test_original_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+test_original_data = np.reshape(test_original_data, (-1, SAMPLE_POINTS))
 
 
 test_data_index = [[[i + j] for i in range(num_timesteps)] for j in range(len(test_original_data) - num_timesteps + 1)]
@@ -130,7 +127,7 @@ for k in test_data_index:
     test_data.append(temp)
 
 test_data.remove([])
-test_data = np.reshape(test_data, (-1, num_timesteps, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+test_data = np.reshape(test_data, (-1, num_timesteps, SAMPLE_POINTS))
 print("testing data shape is: ", test_data.shape)
 
 ########################################################################################
@@ -142,44 +139,24 @@ from keras import regularizers
 from keras.optimizers import Adam
 from sklearn.metrics import classification_report
 
-cnn = Sequential()
-cnn.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
-cnn.add(BatchNormalization(momentum=0.9))
-cnn.add(LeakyReLU(alpha=0.2))
-cnn.add(Dropout(0.2))
+# define cnn model
+num_timesteps = 5
+TRAIN_PERC = 0.75
+BATCH_SIZE = 12
+IMAGE_NUM = 2574
+BATCH_NUM = int(IMAGE_NUM / BATCH_SIZE) + 1
+ITERATIONS = 3000
 
-cnn.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
-cnn.add(BatchNormalization(momentum=0.9))
-cnn.add(LeakyReLU(alpha=0.2))
-cnn.add(Dropout(0.2))
-
-cnn.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
-cnn.add(BatchNormalization(momentum=0.9))
-cnn.add(LeakyReLU(alpha=0.2))
-cnn.add(Dropout(0.2))
-
-cnn.add(Conv2D(128, (3, 3), strides=(2, 2), padding='same'))
-cnn.add(BatchNormalization(momentum=0.9))
-cnn.add(LeakyReLU(alpha=0.2))
-cnn.add(Dropout(0.2))
-
-cnn.add(Flatten())
-
-cnn_lstm = Sequential()
-
-cnn_lstm.add(TimeDistributed(cnn, input_shape=(num_timesteps, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS)))
-cnn_lstm.add(LSTM((50), return_sequences=True))
-cnn_lstm.add(Dropout(0.2))
-cnn_lstm.add(Dense(1, activation="sigmoid", kernel_regularizer=regularizers.l2(0.01)))
-
-cnn_lstm.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
-
-cnn_lstm.summary()
+lstm = Sequential()
+lstm.add(LSTM((50), return_sequences=True, input_shape=(num_timesteps, SAMPLE_POINTS)))
+lstm.add(Dropout(0.2))
+lstm.add(Dense(1, activation="sigmoid", kernel_regularizer=regularizers.l2(0.01)))
+lstm.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
+lstm.summary()
 
 ######################################################################################################
 print("Start training...")
 epoch = 0
-BATCH_NUM = int(len(train_data) / BATCH_SIZE) + 1
 
 for i in range(ITERATIONS):
 
@@ -188,14 +165,14 @@ for i in range(ITERATIONS):
     Y_supervised_samples = np.asarray(train_target[ix])
 
     # update supervised discriminator (c)
-    c_loss, c_acc = cnn_lstm.train_on_batch(X_supervised_samples, Y_supervised_samples)
+    c_loss, c_acc = lstm.train_on_batch(X_supervised_samples, Y_supervised_samples)
 
     if (i + 1) % (BATCH_NUM * 1) == 0:
         epoch += 1
         print(f"Epoch {epoch}, c model accuracy on training data: {c_acc}")
-        _, test_acc = cnn_lstm.evaluate(test_data, test_target, verbose=0)
+        _, test_acc = lstm.evaluate(test_data, test_target, verbose=0)
         print(f"Epoch {epoch}, c model accuracy on test data: {test_acc}")
-        y_pred = cnn_lstm.predict(test_data, batch_size=60, verbose=0)
+        y_pred = lstm.predict(test_data, batch_size=60, verbose=0)
 
         pred_list = y_pred.tolist()
 

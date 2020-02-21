@@ -4,11 +4,17 @@ import os
 from scipy.io import wavfile
 import numpy as np
 
-test_label_path = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
-test_DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Audio_Data"
+# test_label_path = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
+# test_DATA_PATH = r"D:\Data\Data_NC_State\TU409-10B\Audio_Data"
+#
+# train_label_path = r"D:\Data\Data_NC_State\TU405-6B\binary_label.xlsx"
+# train_DATA_PATH = r"D:\Data\Data_NC_State\TU405-6B\Audio_Data"
 
-train_label_path = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
-train_DATA_PATH = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Audio_Data"
+test_label_path = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
+test_DATA_PATH = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Audio_Data"
+
+train_label_path = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
+train_DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Audio_Data"
 
 GENERATE_SQUARE = 64
 IMAGE_CHANNELS = 3
@@ -67,9 +73,6 @@ for j in range(len(train_label_list)):
     audio = data_0[ix] / 100
     train_original_data.append(np.asarray(audio))
 
-train_original_data = np.reshape(train_original_data, (-1, SAMPLE_POINTS))
-
-
 train_data_index = [[[i + j] for i in range(num_timesteps)] for j in range(len(train_original_data) - num_timesteps + 1)]
 train_data = [[]]
 
@@ -84,9 +87,10 @@ for k in train_data_index:
 
 train_data.remove([])
 train_data = np.reshape(train_data, (-1, num_timesteps, SAMPLE_POINTS))
-print("training data shape is: ", train_data.shape)
+print(train_data.shape)
 
-########################################################################################
+#########################################################################################################################
+
 print("Start reading testing Audio & Label data...")
 test_label_list = excel_data(test_label_path)
 test_target_index = [[[i + j] for i in range(num_timesteps)] for j in range(len(test_label_list) - num_timesteps + 1)]
@@ -115,9 +119,6 @@ for j in range(len(test_label_list)):
     audio = data_0[ix] / 100
     test_original_data.append(np.asarray(audio))
 
-test_original_data = np.reshape(test_original_data, (-1, SAMPLE_POINTS))
-
-
 test_data_index = [[[i + j] for i in range(num_timesteps)] for j in range(len(test_original_data) - num_timesteps + 1)]
 test_data = [[]]
 
@@ -132,13 +133,12 @@ for k in test_data_index:
 
 test_data.remove([])
 test_data = np.reshape(test_data, (-1, num_timesteps, SAMPLE_POINTS))
-print("testing data shape is: ", test_data.shape)
+print(test_data.shape)
 
-########################################################################################
-#
+#################################################################################################################
+
 from keras.models import Sequential
-from keras.layers import Conv2D, LeakyReLU, Dropout, Flatten, TimeDistributed, LSTM, Dense, Input
-from keras.layers.normalization import BatchNormalization
+from keras.layers import Dropout, LSTM, Dense
 from keras import regularizers
 from keras.optimizers import Adam
 from sklearn.metrics import classification_report
@@ -149,7 +149,7 @@ TRAIN_PERC = 0.75
 BATCH_SIZE = 12
 IMAGE_NUM = 2574
 BATCH_NUM = int(IMAGE_NUM / BATCH_SIZE) + 1
-ITERATIONS = 3000
+ITERATIONS = 5000
 
 lstm = Sequential()
 lstm.add(LSTM((50), return_sequences=True, input_shape=(num_timesteps, SAMPLE_POINTS)))
@@ -161,6 +161,7 @@ lstm.summary()
 ######################################################################################################
 print("Start training...")
 epoch = 0
+BATCH_NUM = int(len(train_data) / BATCH_SIZE) + 1
 
 for i in range(ITERATIONS):
 

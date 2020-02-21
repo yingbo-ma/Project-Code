@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import librosa.display
 from natsort import natsorted
 
-folder_path = r"D:\Data\Data_NC_State\Pair-2-AM\AudioClips\4"
+folder_path = r"D:\Data\Data_NC_State\TU405-6B\AudioClips\19"
 files = os.listdir(folder_path)
 files = natsorted(files)
 
@@ -23,5 +23,5 @@ for i in files:
     num = int(temp[0])
 
     print("Saving STFT image %d.wav .." % (num))
-    plt.savefig(r"D:\Data\Data_NC_State\Pair-2-AM\Image_Data\%d.jpg" % (num), bbox_inches='tight',
+    plt.savefig(r"D:\Data\Data_NC_State\TU405-6B\Image_Data\%d.jpg" % (num), bbox_inches='tight',
                 pad_inches=0)

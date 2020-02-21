@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import random
 
 precison = [0.42, 0.41, 0.43, 0.42, 0.43, 0.45, 0.44, 0.45, 0.45, 0.45, 0.44, 0.42, 0.43, 0.42, 0.42, 0.43, 0.42, 0.42]
 precision_acc = [i * 100 for i in precison]

@@ -3,28 +3,38 @@ import os
 from PIL import Image
 import numpy as np
 
+test_label_path = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
+test_DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+
+train_label_path_0 = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
+train_DATA_PATH_0 = r"D:\Data\Data_NC_State\TU409-10B\Image_Data"
+
+train_label_path_1 = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
+train_DATA_PATH_1 = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
+
 # test_label_path = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
 # test_DATA_PATH = r"D:\Data\Data_NC_State\TU409-10B\Image_Data"
 #
-# train_label_path = r"D:\Data\Data_NC_State\TU405-6B\binary_label.xlsx"
-# train_DATA_PATH = r"D:\Data\Data_NC_State\TU405-6B\Image_Data"
-
-test_label_path = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
-test_DATA_PATH = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
-
-train_label_path = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
-train_DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+# train_label_path_0 = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
+# train_DATA_PATH_0 = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
+#
+# train_label_path_1 = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
+# train_DATA_PATH_1 = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
 
 GENERATE_SQUARE = 64
 IMAGE_CHANNELS = 3
 CLASS_NUM = 2
-BATCH_SIZE = 60
-n_samples = int(BATCH_SIZE / CLASS_NUM)
+BATCH_SIZE = 100
+num_training_source = 2
+SUB_BATCH_SIZE = int(BATCH_SIZE / num_training_source)
+n_samples = int(SUB_BATCH_SIZE / CLASS_NUM)
 latent_dim = 100
-ITERATIONS = 5000
+IMAGE_NUM = 3000
+BATCH_NUM = int(IMAGE_NUM / SUB_BATCH_SIZE) + 1
+ITERATIONS = 3000
 
 
-### get the all data for 2 classes ######################################################################################################
+### get the all data for 3 classes ######################################################################################################
 def excel_data(file_path):
     data = xlrd.open_workbook(file_path)
     table = data.sheet_by_index(0)
@@ -40,9 +50,9 @@ def excel_data(file_path):
     return excel_list
 
 
-print("Start reading training Image & Label data...")
+print("Start reading training_0 Image & Label data...")
 
-train_list = excel_data(train_label_path)
+train_list = excel_data(train_label_path_0)
 
 train_list_0 = []
 for i, j in enumerate(train_list):
@@ -54,30 +64,72 @@ for i, j in enumerate(train_list):
     if j == 1:
         train_list_1.append(i)
 
-train_class_0_data = []
+train_class_0_data_0 = []
 for index in range(len(train_list_0)):
-    path = os.path.join(train_DATA_PATH, str(train_list_0[index]) + ".jpg")
+    path = os.path.join(train_DATA_PATH_0, str(train_list_0[index]) + ".jpg")
     image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
-    train_class_0_data.append(np.asarray(image))
+    train_class_0_data_0.append(np.asarray(image))
 
-print(len(train_class_0_data))
+print(len(train_class_0_data_0))
 
-train_class_0_data = np.reshape(train_class_0_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
-# it seems cutting some 0 data here could lead to training performance improvement, not sure the reason
+train_class_0_data_0 = np.reshape(train_class_0_data_0, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
 
-train_class_1_data = []
+
+train_class_1_data_0 = []
 for index in range(len(train_list_1)):
-    path = os.path.join(train_DATA_PATH, str(train_list_1[index]) + ".jpg")
+    path = os.path.join(train_DATA_PATH_0, str(train_list_1[index]) + ".jpg")
     image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
-    train_class_1_data.append(np.asarray(image))
+    train_class_1_data_0.append(np.asarray(image))
 
-print(len(train_class_1_data))
+print(len(train_class_1_data_0))
 
-train_class_1_data = np.reshape(train_class_1_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+train_class_1_data_0 = np.reshape(train_class_1_data_0, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
 
-train_data = np.concatenate((train_class_0_data, train_class_1_data), axis=0)
+train_data_0 = np.concatenate((train_class_0_data_0, train_class_1_data_0), axis=0)
 
-print(train_data.shape)
+print("train_data_0.shape: ", train_data_0.shape)
+
+###############################################################################################################
+print("Start reading training_1 Image & Label data...")
+
+train_list = excel_data(train_label_path_1)
+
+train_list_0 = []
+for i, j in enumerate(train_list):
+    if j == 0:
+        train_list_0.append(i)
+
+train_list_1 = []
+for i, j in enumerate(train_list):
+    if j == 1:
+        train_list_1.append(i)
+
+train_class_0_data_1 = []
+for index in range(len(train_list_0)):
+    path = os.path.join(train_DATA_PATH_1, str(train_list_0[index]) + ".jpg")
+    image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
+    train_class_0_data_1.append(np.asarray(image))
+
+print(len(train_class_0_data_1))
+
+train_class_0_data_1 = np.reshape(train_class_0_data_1, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+
+# we can cut some 0 data here to improve training performance
+
+train_class_1_data_1 = []
+for index in range(len(train_list_1)):
+    path = os.path.join(train_DATA_PATH_1, str(train_list_1[index]) + ".jpg")
+    image = Image.open(path).resize((GENERATE_SQUARE, GENERATE_SQUARE), Image.ANTIALIAS)
+    train_class_1_data_1.append(np.asarray(image))
+
+print(len(train_class_1_data_1))
+
+train_class_1_data_1 = np.reshape(train_class_1_data_1, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
+
+train_data_1 = np.concatenate((train_class_0_data_1, train_class_1_data_1), axis=0)
+
+print("train_data_1.shape: ", train_data_1.shape)
+
 
 ########################################################################################################
 print("Start reading testing Image & Label data...")
@@ -139,11 +191,11 @@ from sklearn.metrics import classification_report
 from keras import regularizers
 
 
-# define model
+# define supervised and unsupervised discriminator models
 def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
     # image input
     in_image = Input(shape=in_shape)
-
+    # downsample
     fe = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(in_image)
     fe = BatchNormalization(momentum=0.9)(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
@@ -180,20 +232,27 @@ c_model.summary()
 print("Start training...")
 
 epoch = 0
-BATCH_NUM = int(len(train_data) / BATCH_SIZE) + 1
 
 for i in range(ITERATIONS):
     ####generate supervised real data
-    ix = np.random.randint(0, len(train_class_0_data), n_samples)
-    X_supervised_samples_class_0 = np.asarray(train_class_0_data[ix])
-    Y_supervised_samples_class_0 = np.zeros((n_samples, 1))
+    ix_0 = np.random.randint(0, len(train_class_0_data_0), n_samples)
+    ix_1 = np.random.randint(0, len(train_class_0_data_1), n_samples)
 
-    ix = np.random.randint(0, len(train_class_1_data), n_samples)
-    X_supervised_samples_class_1 = np.asarray(train_class_1_data[ix])
-    Y_supervised_samples_class_1 = np.ones((n_samples, 1))
+    X_supervised_samples_class_0_from_source_0 = np.asarray(train_class_0_data_0[ix_0])
+    X_supervised_samples_class_0_from_source_1 = np.asarray(train_class_0_data_1[ix_1])
+    Y_supervised_samples_class_0 = np.zeros((SUB_BATCH_SIZE, 1))
+
+    ix_0 = np.random.randint(0, len(train_class_1_data_0), n_samples)
+    ix_1 = np.random.randint(0, len(train_class_1_data_1), n_samples)
+    X_supervised_samples_class_1_from_source_0 = np.asarray(train_class_1_data_0[ix_0])
+    X_supervised_samples_class_1_from_source_1 = np.asarray(train_class_1_data_1[ix_1])
+    Y_supervised_samples_class_1 = np.ones((SUB_BATCH_SIZE, 1))
 
     Xsup_real = np.concatenate(
-        (X_supervised_samples_class_0, X_supervised_samples_class_1), axis=0)
+        (X_supervised_samples_class_0_from_source_0,
+         X_supervised_samples_class_0_from_source_1,
+         X_supervised_samples_class_1_from_source_0,
+         X_supervised_samples_class_1_from_source_1), axis=0)
     ysup_real = np.concatenate(
         (Y_supervised_samples_class_0, Y_supervised_samples_class_1), axis=0)
 

@@ -1,9 +1,6 @@
 import xlrd
-import os
-from PIL import Image
-import numpy as np
 
-label_path = r"D:\Data\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
+label_path = r"D:\Data\Data_NC_State\TU405-6B\binary_label.xlsx"
 
 ### get the all data for 3 classes ######################################################################################################
 def excel_data(file_path):
@@ -42,5 +39,3 @@ print(X_with_Class_1_Num)
 
 print(list_0)
 print(list_1)
-
-print(list_0.index(2101))
