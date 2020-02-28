@@ -1,6 +1,6 @@
 import xlrd
 
-label_path = r"D:\Data\Data_NC_State\TU405-6B\binary_label.xlsx"
+label_path = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
 
 ### get the all data for 3 classes ######################################################################################################
 def excel_data(file_path):
