@@ -3,17 +3,18 @@ import os
 from PIL import Image
 import numpy as np
 
-test_label_path_0 = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
-test_DATA_PATH_0 = r"D:\Data\Data_NC_State\TU409-10B\Image_Data"
+test_label_path_0 = r"D:\Publications\SIGDIAL_2020\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
+test_DATA_PATH_0 = r"D:\Publications\SIGDIAL_2020\Data\Data_NC_State\TU409-10B\Image_Data"
 
-test_label_path_1 = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
-test_DATA_PATH_1 = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
+test_label_path_1 = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
+test_DATA_PATH_1 = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
 
-train_label_path_0 = r"D:\Data\Data_NC_State\TU405-6B\binary_label.xlsx"
-train_DATA_PATH_0 = r"D:\Data\Data_NC_State\TU405-6B\Image_Data"
+train_label_path_0 = r"D:\Publications\SIGDIAL_2020\Data\Data_NC_State\TU405-6B\binary_label.xlsx"
+train_DATA_PATH_0 = r"D:\Publications\SIGDIAL_2020\Data\Data_NC_State\TU405-6B\Image_Data"
 
-train_label_path_1 = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
-train_DATA_PATH_1 = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+train_label_path_1 = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
+train_DATA_PATH_1 = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+
 
 
 GENERATE_SQUARE = 64

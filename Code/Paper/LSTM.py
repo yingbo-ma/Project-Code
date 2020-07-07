@@ -9,8 +9,8 @@ TRAIN_PERC = 0.75
 
 SAMPLE_POINTS = 10000
 
-label_path = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
-DATA_PATH = r"D:\Data\Data_NC_State\TU409-10B\Audio_Data"
+label_path = r"D:\Publications\SIGDIAL_2020\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
+DATA_PATH = r"D:\Publications\SIGDIAL_2020\Data\Data_NC_State\TU409-10B\Audio_Data"
 
 def excel_data(file_path):
     data = xlrd.open_workbook(file_path)

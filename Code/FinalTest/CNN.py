@@ -9,11 +9,11 @@ import numpy as np
 # train_label_path = r"D:\Data\Data_NC_State\TU405-6B\binary_label.xlsx"
 # train_DATA_PATH = r"D:\Data\Data_NC_State\TU405-6B\Image_Data"
 
-test_label_path = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
-test_DATA_PATH = r"D:\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
+test_label_path = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
+test_DATA_PATH = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
 
-train_label_path = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
-train_DATA_PATH = r"D:\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+train_label_path = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
+train_DATA_PATH = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
 
 GENERATE_SQUARE = 64
 IMAGE_CHANNELS = 3

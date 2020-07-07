@@ -1,8 +1,8 @@
 from sklearn.metrics import cohen_kappa_score
 import xlrd
 
-label_path_1 = r"C:\Users\Yingbo\Desktop\Jule_Binary_Label.xlsx"
-label_path_2 = r"C:\Users\Yingbo\Desktop\Yingbo_Binary_Label.xlsx"
+label_path_1 = r"C:\Users\Yingbo\Desktop\Kappa\With Jule\Jule.xlsx"
+label_path_2 = r"C:\Users\Yingbo\Desktop\Kappa\With Jule\Yingbo.xlsx"
 
 def excel_data(file_path):
     data = xlrd.open_workbook(file_path)

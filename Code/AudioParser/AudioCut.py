@@ -1,7 +1,7 @@
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 
-audio_path = r"D:\Data\LD14_PKYonge_Class1_Mar142019\Audio\LD14_PKYonge_Class1_Mar142019.wav"
+audio_path = r"D:\Data_Samples\8\sample.wav"
 
 myaudio = AudioSegment.from_file(audio_path)
 chunk_length_ms = 1000 # pydub calculates in millisec

@@ -3,8 +3,8 @@ import os
 from PIL import Image
 import numpy as np
 
-label_path = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
-DATA_PATH = r"D:\Data\Data_NC_State\TU409-10B\Image_Data"
+label_path = r"D:\Publications\SIGDIAL_2020\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
+DATA_PATH = r"D:\Publications\SIGDIAL_2020\Data\Data_NC_State\TU409-10B\Image_Data"
 
 GENERATE_SQUARE = 64
 IMAGE_CHANNELS = 3
