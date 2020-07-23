@@ -13,6 +13,8 @@ from keras.layers.normalization import BatchNormalization
 from keras.layers import LeakyReLU
 from keras.layers import Dropout
 from keras import regularizers
+from keras.layers import concatenate
+from keras.utils.vis_utils import plot_model
 
 def read_excel(label_file_path):
     data = xlrd.open_workbook(label_file_path)
@@ -255,5 +257,97 @@ def define_model(input_shape, n_classes):
     c_model.compile(loss='sparse_categorical_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
 
     c_model.summary()
+
+    return c_model
+
+def multiple_inputs_model(input_shape_A, input_shape_B, input_shape_C, n_classes):
+    in_image_A = Input(shape=input_shape_A)
+    in_image_B = Input(shape=input_shape_B)
+    in_image_C = Input(shape=input_shape_C)
+
+    # the first branch operates on the first input
+    fe_A = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(in_image_A)
+    fe_A = BatchNormalization(momentum=0.9)(fe_A)
+    fe_A = LeakyReLU(alpha=0.2)(fe_A)
+    fe_A = Dropout(0.15)(fe_A)
+
+    fe_A = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe_A)
+    fe_A = BatchNormalization(momentum=0.9)(fe_A)
+    fe_A = LeakyReLU(alpha=0.2)(fe_A)
+    fe_A = Dropout(0.15)(fe_A)
+
+    fe_A = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe_A)
+    fe_A = BatchNormalization(momentum=0.9)(fe_A)
+    fe_A = LeakyReLU(alpha=0.2)(fe_A)
+    fe_A = Dropout(0.15)(fe_A)
+
+    fe_A = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe_A)
+    fe_A = BatchNormalization(momentum=0.9)(fe_A)
+    fe_A = LeakyReLU(alpha=0.2)(fe_A)
+    fe_A = Dropout(0.15)(fe_A)
+
+    fe_A = Flatten()(fe_A)
+
+    fe_A = Model(inputs=in_image_A, outputs=fe_A)
+
+    # the second branch operates on the second input
+    fe_B = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(in_image_B)
+    fe_B = BatchNormalization(momentum=0.9)(fe_B)
+    fe_B = LeakyReLU(alpha=0.2)(fe_B)
+    fe_B = Dropout(0.15)(fe_B)
+
+    fe_B = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe_B)
+    fe_B = BatchNormalization(momentum=0.9)(fe_B)
+    fe_B = LeakyReLU(alpha=0.2)(fe_B)
+    fe_B = Dropout(0.15)(fe_B)
+
+    fe_B = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe_B)
+    fe_B = BatchNormalization(momentum=0.9)(fe_B)
+    fe_B = LeakyReLU(alpha=0.2)(fe_B)
+    fe_B = Dropout(0.15)(fe_B)
+
+    fe_B = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe_B)
+    fe_B = BatchNormalization(momentum=0.9)(fe_B)
+    fe_B = LeakyReLU(alpha=0.2)(fe_B)
+    fe_B = Dropout(0.15)(fe_B)
+
+    fe_B = Flatten()(fe_B)
+
+    fe_B = Model(inputs=in_image_B, outputs=fe_B)
+
+    # the third branch operates on the third input
+    fe_C = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(in_image_C)
+    fe_C = BatchNormalization(momentum=0.9)(fe_C)
+    fe_C = LeakyReLU(alpha=0.2)(fe_C)
+    fe_C = Dropout(0.15)(fe_C)
+
+    fe_C = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe_C)
+    fe_C = BatchNormalization(momentum=0.9)(fe_C)
+    fe_C = LeakyReLU(alpha=0.2)(fe_C)
+    fe_C = Dropout(0.15)(fe_C)
+
+    fe_C = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe_C)
+    fe_C = BatchNormalization(momentum=0.9)(fe_C)
+    fe_C = LeakyReLU(alpha=0.2)(fe_C)
+    fe_C = Dropout(0.15)(fe_C)
+
+    fe_C = Conv2D(128, (3, 3), strides=(2, 2), padding='same')(fe_C)
+    fe_C = BatchNormalization(momentum=0.9)(fe_C)
+    fe_C = LeakyReLU(alpha=0.2)(fe_C)
+    fe_C = Dropout(0.15)(fe_C)
+
+    fe_C = Flatten()(fe_C)
+
+    fe_C = Model(inputs=in_image_C, outputs=fe_C)
+
+    # combine the features from three inputs
+    combined = concatenate([fe_A.output, fe_B.output, fe_C.output])
+
+    c_out_layer = Dense(n_classes, activation="softmax", kernel_regularizer=regularizers.l2(0.01))(combined)
+    c_model = Model(inputs=[fe_A.input, fe_B.input, fe_C.input], outputs=c_out_layer)
+    c_model.compile(loss='sparse_categorical_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
+
+    c_model.summary()
+    plot_model(c_model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
 
     return c_model
