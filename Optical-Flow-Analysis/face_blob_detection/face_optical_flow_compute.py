@@ -3,9 +3,17 @@ import numpy as np
 import os
 
 base_dir = os.path.dirname(__file__)
+
+if not os.path.exists('left_faces_optical_flow'):
+    print("New directory created")
+    os.makedirs('left_faces_optical_flow')
+
+if not os.path.exists('right_faces_optical_flow'):
+    print("New directory created")
+    os.makedirs('right_faces_optical_flow')
+
 image_folder = base_dir + "/right_faces/"
 list = os.listdir(image_folder) # dir is your directory path
-count = len(list)
 
 first_image_path = image_folder + "0.jpg"
 first_image = cv2.imread(first_image_path)
@@ -30,13 +38,14 @@ for index in range(len(list)):
     flow = cv2.calcOpticalFlowFarneback(first_gray, next_gray, None, pyr_scale=0.5, levels=5, winsize=11, iterations=5, poly_n=5, poly_sigma=1.1, flags=0)
 
     magnitude, angle = cv2.cartToPolar(flow[..., 0], flow[..., 1])
+
     mask[..., 0] = angle * 180 / np.pi / 2
     mask[..., 2] = cv2.normalize(magnitude, None, 0, 255, cv2.NORM_MINMAX)
 
-    np.mean(magnitude)
+    # The optical flow field color-coding. Smaller vectors are lighter and color represents the direction
     rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
-    # cv2.imshow("Dense optical flow", magnitude)
-    cv2.imshow("Dense optical flow", rgb)
+    # cv2.imshow("Dense optical flow", rgb)
+    cv2.imwrite(base_dir + '/right_faces_optical_flow/' + str(index) + ".jpg", magnitude)
 
     first_gray = next_gray
     if cv2.waitKey(500) & 0xFF == ord('q'):

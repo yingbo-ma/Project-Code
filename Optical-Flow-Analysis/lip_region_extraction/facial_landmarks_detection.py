@@ -1,7 +1,6 @@
 import os
 import cv2
 import dlib
-import numpy as np
 
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
@@ -19,7 +18,7 @@ if not os.path.exists('right_faces'):
     print("New directory created")
     os.makedirs('right_faces')
 
-vc = cv2.VideoCapture("1.mpeg")
+vc = cv2.VideoCapture("all.mpeg")
 ret, first_frame = vc.read()
 imageIndex = 0
 resize_dim = 600

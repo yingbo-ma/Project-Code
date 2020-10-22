@@ -10,7 +10,7 @@ caffemodel_path = os.path.join(base_dir + '/model_data/weights.caffemodel')
 # Read the model
 model = cv2.dnn.readNetFromCaffe(prototxt_path, caffemodel_path)
 
-if not os.path.exists('right_faces'):
+if not os.path.exists('left_faces'):
     print("New directory created")
     os.makedirs('left_faces')
 

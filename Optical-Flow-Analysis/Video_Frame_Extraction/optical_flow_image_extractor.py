@@ -3,7 +3,7 @@ import numpy as np
 
 # Get a VideoCapture object from video and store it in vс
 # or simply type 0 to get input from your webcam. If you`re using an external webcam type 1
-vc = cv2.VideoCapture("origin.mpeg")
+vc = cv2.VideoCapture("3.mp4")
 
 # Read first frame
 _, first_frame = vc.read()

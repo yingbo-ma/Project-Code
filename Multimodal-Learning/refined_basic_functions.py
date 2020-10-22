@@ -118,7 +118,15 @@ def spectrogram_data_prepare(excel_list, spectrogram_data_path, pixel, num_chann
 
     train_data = np.concatenate((class_0_train_data, class_1_train_data, class_2_train_data), axis=0)
     test_data = np.concatenate((class_0_test_data, class_1_test_data, class_2_test_data), axis=0)
-    test_label = np.concatenate((np.zeros((len(class_0_test_data), 1)), np.ones((len(class_1_test_data), 1)), 2 * np.ones((len(class_2_test_data), 1))), axis=0)
+
+    test_label_list = [[1, 0, 0]]
+    for count in range(len(class_0_test_data) - 1):
+        test_label_list.append([1, 0, 0])
+    for count in range(len(class_1_test_data)):
+        test_label_list.append([0, 1, 0])
+    for count in range(len(class_2_test_data)):
+        test_label_list.append([0, 0, 1])
+    test_label = np.asarray(test_label_list)
 
     print("data_train.shape: ", train_data.shape)
     print("data_test.shape: ", test_data.shape)
@@ -345,7 +353,7 @@ def multiple_inputs_model(input_shape_A, input_shape_B, input_shape_C, n_classes
 
     c_out_layer = Dense(n_classes, activation="softmax", kernel_regularizer=regularizers.l2(0.01))(combined)
     c_model = Model(inputs=[fe_A.input, fe_B.input, fe_C.input], outputs=c_out_layer)
-    c_model.compile(loss='sparse_categorical_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
+    c_model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
 
     c_model.summary()
     plot_model(c_model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)

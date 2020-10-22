@@ -31,7 +31,7 @@ right_motion_model = define_model(input_shape = (PIXEL, PIXEL, OPTIC_IMAGE_CHANN
 
 print("Start training...")
 
-BATCH_SIZE = 60
+BATCH_SIZE = 128
 n_samples = int(BATCH_SIZE / CLASS_NUM)
 BATCH_NUM = int(len(spectrogram_train_data) / BATCH_SIZE) + 1
 ITERATIONS = 5000
@@ -126,7 +126,8 @@ for i in range(ITERATIONS):
         
         for i in range(len(spectrogram_test_data)):
             for j in range(CLASS_NUM):
-                aver_y_pred[i][j] = ( acoustic_y_pred[i][j] + left_motion_y_pred[i][j] + right_motion_y_pred[i][j] ) / 3
+                # aver_y_pred[i][j] = ( acoustic_y_pred[i][j] + left_motion_y_pred[i][j] + right_motion_y_pred[i][j] ) / 3
+                aver_y_pred[i][j] = 0.4*acoustic_y_pred[i][j] + 0.4*left_motion_y_pred[i][j] + 0.2*right_motion_y_pred[i][j]
 
         y_pred_bool = np.argmax(aver_y_pred, axis=1)
         print(classification_report(test_label, y_pred_bool))

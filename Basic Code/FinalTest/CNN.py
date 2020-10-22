@@ -2,6 +2,7 @@ import xlrd
 import os
 from PIL import Image
 import numpy as np
+import matplotlib.pyplot as plt
 
 # test_label_path = r"D:\Data\Data_NC_State\TU409-10B\binary_label.xlsx"
 # test_DATA_PATH = r"D:\Data\Data_NC_State\TU409-10B\Image_Data"
@@ -9,11 +10,11 @@ import numpy as np
 # train_label_path = r"D:\Data\Data_NC_State\TU405-6B\binary_label.xlsx"
 # train_DATA_PATH = r"D:\Data\Data_NC_State\TU405-6B\Image_Data"
 
-test_label_path = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
-test_DATA_PATH = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
+test_label_path = r"E:\Research Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\binary_label.xlsx"
+test_DATA_PATH = r"E:\Research Data\Data_UF\Jule_LD14_PKYonge_Class1_Mar142019\Image_Data"
 
-train_label_path = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
-train_DATA_PATH = r"D:\Publications\SIGDIAL_2020\Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
+train_label_path = r"E:\Research Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\binary_label.xlsx"
+train_DATA_PATH = r"E:\Research Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
 
 GENERATE_SQUARE = 64
 IMAGE_CHANNELS = 3
@@ -76,6 +77,7 @@ print(len(train_class_1_data))
 train_class_1_data = np.reshape(train_class_1_data, (-1, GENERATE_SQUARE, GENERATE_SQUARE, IMAGE_CHANNELS))
 
 train_data = np.concatenate((train_class_0_data, train_class_1_data), axis=0)
+y_train = np.concatenate((np.zeros((len(train_class_0_data), 1)), np.ones((len(train_class_1_data), 1))), axis=0)
 
 print(train_data.shape)
 
@@ -167,9 +169,9 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
     # flatten feature maps
     fe = Flatten()(fe)
 
-    c_out_layer = Dense(1, activation="sigmoid", kernel_regularizer=regularizers.l2(0.01))(fe)
+    c_out_layer = Dense(1, activation="sigmoid", kernel_regularizer=regularizers.l2(0.05))(fe)
     c_model = Model(in_image, c_out_layer)
-    c_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
+    c_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0001, beta_1=0.5), metrics=['accuracy'])
 
     return c_model
 
@@ -177,44 +179,30 @@ def define_discriminator(in_shape=(64, 64, 3), n_classes=2):
 c_model = define_discriminator()
 c_model.summary()
 
-print("Start training...")
+history = c_model.fit(
+    train_data,
+    y_train,
+    batch_size = BATCH_SIZE,
+    epochs = 100,
+    shuffle = True,
+    validation_data = (test_data, y_test)
+)
 
-epoch = 0
-BATCH_NUM = int(len(train_data) / BATCH_SIZE) + 1
-
-for i in range(ITERATIONS):
-    ####generate supervised real data
-    ix = np.random.randint(0, len(train_class_0_data), n_samples)
-    X_supervised_samples_class_0 = np.asarray(train_class_0_data[ix])
-    Y_supervised_samples_class_0 = np.zeros((n_samples, 1))
-
-    ix = np.random.randint(0, len(train_class_1_data), n_samples)
-    X_supervised_samples_class_1 = np.asarray(train_class_1_data[ix])
-    Y_supervised_samples_class_1 = np.ones((n_samples, 1))
-
-    Xsup_real = np.concatenate(
-        (X_supervised_samples_class_0, X_supervised_samples_class_1), axis=0)
-    ysup_real = np.concatenate(
-        (Y_supervised_samples_class_0, Y_supervised_samples_class_1), axis=0)
-
-    # update supervised discriminator (c)
-    c_loss, c_acc = c_model.train_on_batch(Xsup_real, ysup_real)
-
-    if (i + 1) % (BATCH_NUM * 1) == 0:
-        epoch += 1
-        print(f"Epoch {epoch}, c model accuracy on training data: {c_acc}")
-        _, test_acc = c_model.evaluate(test_data, y_test, verbose=0)
-        print(f"Epoch {epoch}, c model accuracy on test data: {test_acc}")
-        y_pred = c_model.predict(test_data, batch_size=60, verbose=0)
-
-        pred_list = y_pred.tolist()
-
-        for i in range(len(pred_list)):
-            if pred_list[i] > [0.5]:
-                pred_list[i] = [1]
-            else:
-                pred_list[i] = [0]
-
-        y_pred = np.asarray(pred_list)
-        print("Length of y_pred: ", len(y_pred))
-        print(classification_report(y_test, y_pred))
+# list all data in history
+print(history.history.keys())
+# summarize history for accuracy
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()

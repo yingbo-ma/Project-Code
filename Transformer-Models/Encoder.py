@@ -106,15 +106,15 @@ transform.add(Dense(1, activation="sigmoid", kernel_regularizer=regularizers.l2(
 transform.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5), metrics=['accuracy'])
 transform.build(input_shape=input_shape)
 transform.summary()
-
-
-
-list = [[[1., 2., 3., 4, 5, 6, 7, 8], [2., 3., 4., 5, 6, 7, 8, 9]]]
-inputs_sequence = np.asarray(list)
-
-E = EncoderLayer(ffn_units=2048, nb_proj=2, droupout=0.2)
-outputs = E(inputs_sequence, training=True)
-print(outputs)
-D = layers.Dense(units=1, activation="sigmoid")
-o = D(outputs)
-print(o)
+#
+#
+#
+# list = [[[1., 2., 3., 4, 5, 6, 7, 8], [2., 3., 4., 5, 6, 7, 8, 9]]]
+# inputs_sequence = np.asarray(list)
+#
+# E = EncoderLayer(ffn_units=2048, nb_proj=2, droupout=0.2)
+# outputs = E(inputs_sequence, training=True)
+# print(outputs)
+# D = layers.Dense(units=1, activation="sigmoid")
+# o = D(outputs)
+# print(o)

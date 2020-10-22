@@ -36,7 +36,7 @@ def scaled_dot_product_attention(queries, keys, values, mask=None):
     attention_weights = tf.nn.softmax(scaled_product, axis=-1)
     attention_scores = tf.matmul(attention_weights, values)
 
-    return attention_scores
+    return attention_weights, attention_scores
 
 class MultiHeadAttention(layers.Layer):
 
@@ -73,22 +73,25 @@ class MultiHeadAttention(layers.Layer):
         keys = self.split_proj(keys, batch_size)
         values = self.split_proj(values, batch_size)
 
-        attention = scaled_dot_product_attention(queries, keys, values)
+        scaled_scores, attention = scaled_dot_product_attention(queries, keys, values)
         attention = tf.transpose(attention, perm=[0, 2, 1, 3])
         concat_attention = tf.reshape(attention, shape=(batch_size, -1, self.dimension))
 
         outputs = self.final_lin(concat_attention)
 
         return outputs
-# #
-# #
-# P = PositionalEncoding()
 #
-# list = [[[1., 2., 3., 4, 5, 6, 7, 8], [2., 3., 4., 5, 6, 7, 8, 9]]]
-# inputs_sequence = np.asarray(list)
-# output = P(inputs_sequence)
-# print(output)
 #
-# M = MultiHeadAttention(nb_proj=4)
-# outputs = M(output, output, output)
-# print(outputs)
+P = PositionalEncoding()
+
+list = [[[1., 2., 3., 4, 5, 6, 7, 8], [2., 3., 4., 5, 6, 7, 8, 9]]]
+inputs_sequence = np.asarray(list)
+output = P(inputs_sequence)
+print(output)
+
+M = MultiHeadAttention(nb_proj=4)
+scores, outputs = M(output, output, output)
+print(outputs)
+print(scores)
+
+

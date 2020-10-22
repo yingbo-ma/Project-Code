@@ -6,7 +6,7 @@ label_path = r"E:\Research Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\ne
 image_path = r"E:\Research Data\Data_UF\Yingbo_LD2_PKYonge_Class1_Mar142019_B\Image_Data"
 
 PIXEL = 64
-IMAGE_CHANNELS = 3
+IMAGE_CHANNELS = 1
 SPLIT_RATIO = 0.75
 CLASS_NUM = 3
 
