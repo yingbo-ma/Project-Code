@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 # Load pre-trained model tokenizer (vocabulary)
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
-text = '[CLS] I want to [MASK] the car because it is cheap . [SEP]'
+text = '[CLS] I want to [MASK] the car because it is expensive. [SEP]'
 tokenized_text = tokenizer.tokenize(text)
 indexed_tokens = tokenizer.convert_tokens_to_ids(tokenized_text)
 
