@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ba9a9f17-e31a-4f69-8415-7eda9302065e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction/audio_parse.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction/quick-start.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction/video_parse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Research Code.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/other.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Regular-Workspace/NLP/ENGAGE/copy_excel_files_into_a_single_one.py" beforeDir="false" afterPath="$PROJECT_DIR$/Regular-Workspace/NLP/ENGAGE/paste_excel_files_into_a_single_one.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Regular-Workspace/NLP/ENGAGE/preprocessing_engage_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/Regular-Workspace/NLP/ENGAGE/preprocessing_engage_data.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JupyterTrust" id="288473e6-f9f3-459f-9a2a-9d120c687c34" />
+  <component name="ProjectId" id="1pNhRVsaT9c8aFDr3JBVXsVtCJM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../The-Challenge-of-Noisy-Classrooms-AIED2021" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager" selected="Python.preprocessing_engage_data">
+    <configuration name="audio_parse" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Project-Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction/audio_parse.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="preprocessing_engage_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Project-Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Regular-Workspace/NLP/ENGAGE" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Regular-Workspace/NLP/ENGAGE/preprocessing_engage_data.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="quick-start" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Project-Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction/quick-start.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="video_parse" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Project-Code" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction/video_parse.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.preprocessing_engage_data" />
+        <item itemvalue="Python.quick-start" />
+        <item itemvalue="Python.audio_parse" />
+        <item itemvalue="Python.video_parse" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ba9a9f17-e31a-4f69-8415-7eda9302065e" name="Default Changelist" comment="" />
+      <created>1615029450395</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1615029450395</updated>
+      <workItem from="1615029454083" duration="1000" />
+      <workItem from="1615031013517" duration="12691000" />
+      <workItem from="1615129043939" duration="4086000" />
+      <workItem from="1615141523822" duration="1529000" />
+      <workItem from="1615143957762" duration="69000" />
+      <workItem from="1615144203521" duration="358000" />
+      <workItem from="1616654347560" duration="249000" />
+      <workItem from="1618651101480" duration="1170000" />
+      <workItem from="1618744401902" duration="3221000" />
+      <workItem from="1618756923555" duration="6031000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="954" y="339" key="FileChooserDialogImpl" timestamp="1618651588702">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state x="954" y="339" key="FileChooserDialogImpl/2560.115.1920.1170/0.0.2560.1410@0.0.2560.1410" timestamp="1618651588702" />
+    <state width="2491" height="859" key="GridCell.Tab.0.bottom" timestamp="1618772939609">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state width="2491" height="766" key="GridCell.Tab.0.bottom/2560.115.1920.1160/0.0.2560.1400@0.0.2560.1400" timestamp="1615144026641" />
+    <state width="1851" height="352" key="GridCell.Tab.0.bottom/2560.115.1920.1160/0.0.2560.1400@2560.115.1920.1160" timestamp="1615131720189" />
+    <state width="2491" height="859" key="GridCell.Tab.0.bottom/2560.115.1920.1170/0.0.2560.1410@0.0.2560.1410" timestamp="1618772939609" />
+    <state width="2491" height="859" key="GridCell.Tab.0.center" timestamp="1618772939609">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state width="2491" height="766" key="GridCell.Tab.0.center/2560.115.1920.1160/0.0.2560.1400@0.0.2560.1400" timestamp="1615144026641" />
+    <state width="1851" height="352" key="GridCell.Tab.0.center/2560.115.1920.1160/0.0.2560.1400@2560.115.1920.1160" timestamp="1615131720189" />
+    <state width="2491" height="859" key="GridCell.Tab.0.center/2560.115.1920.1170/0.0.2560.1410@0.0.2560.1410" timestamp="1618772939609" />
+    <state width="2491" height="859" key="GridCell.Tab.0.left" timestamp="1618772939609">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state width="2491" height="766" key="GridCell.Tab.0.left/2560.115.1920.1160/0.0.2560.1400@0.0.2560.1400" timestamp="1615144026641" />
+    <state width="1851" height="352" key="GridCell.Tab.0.left/2560.115.1920.1160/0.0.2560.1400@2560.115.1920.1160" timestamp="1615131720189" />
+    <state width="2491" height="859" key="GridCell.Tab.0.left/2560.115.1920.1170/0.0.2560.1410@0.0.2560.1410" timestamp="1618772939609" />
+    <state width="2491" height="859" key="GridCell.Tab.0.right" timestamp="1618772939609">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state width="2491" height="766" key="GridCell.Tab.0.right/2560.115.1920.1160/0.0.2560.1400@0.0.2560.1400" timestamp="1615144026641" />
+    <state width="1851" height="352" key="GridCell.Tab.0.right/2560.115.1920.1160/0.0.2560.1400@2560.115.1920.1160" timestamp="1615131720189" />
+    <state width="2491" height="859" key="GridCell.Tab.0.right/2560.115.1920.1170/0.0.2560.1410@0.0.2560.1410" timestamp="1618772939609" />
+    <state width="2491" height="460" key="GridCell.Tab.1.bottom" timestamp="1618772023236">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state width="1851" height="360" key="GridCell.Tab.1.bottom/2560.115.1920.1160/0.0.2560.1400@0.0.2560.1400" timestamp="1615133250956" />
+    <state width="1851" height="360" key="GridCell.Tab.1.bottom/2560.115.1920.1160/0.0.2560.1400@2560.115.1920.1160" timestamp="1615129737569" />
+    <state width="2491" height="460" key="GridCell.Tab.1.bottom/2560.115.1920.1170/0.0.2560.1410@0.0.2560.1410" timestamp="1618772023236" />
+    <state width="2491" height="460" key="GridCell.Tab.1.center" timestamp="1618772023236">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state width="1851" height="360" key="GridCell.Tab.1.center/2560.115.1920.1160/0.0.2560.1400@0.0.2560.1400" timestamp="1615133250956" />
+    <state width="1851" height="360" key="GridCell.Tab.1.center/2560.115.1920.1160/0.0.2560.1400@2560.115.1920.1160" timestamp="1615129737569" />
+    <state width="2491" height="460" key="GridCell.Tab.1.center/2560.115.1920.1170/0.0.2560.1410@0.0.2560.1410" timestamp="1618772023236" />
+    <state width="2491" height="460" key="GridCell.Tab.1.left" timestamp="1618772023236">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state width="1851" height="360" key="GridCell.Tab.1.left/2560.115.1920.1160/0.0.2560.1400@0.0.2560.1400" timestamp="1615133250955" />
+    <state width="1851" height="360" key="GridCell.Tab.1.left/2560.115.1920.1160/0.0.2560.1400@2560.115.1920.1160" timestamp="1615129737569" />
+    <state width="2491" height="460" key="GridCell.Tab.1.left/2560.115.1920.1170/0.0.2560.1410@0.0.2560.1410" timestamp="1618772023236" />
+    <state width="2491" height="460" key="GridCell.Tab.1.right" timestamp="1618772023236">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state width="1851" height="360" key="GridCell.Tab.1.right/2560.115.1920.1160/0.0.2560.1400@0.0.2560.1400" timestamp="1615133250956" />
+    <state width="1851" height="360" key="GridCell.Tab.1.right/2560.115.1920.1160/0.0.2560.1400@2560.115.1920.1160" timestamp="1615129737569" />
+    <state width="2491" height="460" key="GridCell.Tab.1.right/2560.115.1920.1170/0.0.2560.1410@0.0.2560.1410" timestamp="1618772023236" />
+    <state x="516" y="209" key="SettingsEditor" timestamp="1618756969960">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state x="516" y="209" key="SettingsEditor/2560.115.1920.1170/0.0.2560.1410@0.0.2560.1410" timestamp="1618756969960" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Project_Code$audio_parse.coverage" NAME="audio_parse Coverage Results" MODIFIED="1618746741562" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction" />
+    <SUITE FILE_PATH="coverage/Project_Code$preprocessing_engage_data.coverage" NAME="preprocessing_engage_data Coverage Results" MODIFIED="1618772935800" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Regular-Workspace/NLP/ENGAGE" />
+    <SUITE FILE_PATH="coverage/Project_Code$quick_start.coverage" NAME="quick-start Coverage Results" MODIFIED="1618747007907" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction" />
+    <SUITE FILE_PATH="coverage/Project_Code$video_parse.coverage" NAME="video_parse Coverage Results" MODIFIED="1618746731496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Regular-Workspace/Facial-Features-Extraction" />
+  </component>
+</project>
